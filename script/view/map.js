@@ -1,10 +1,12 @@
 import * as summary from './summary.js'
+import * as engine from '../control/engine.js'
 
 const CANVAS=document.querySelector('canvas#map')
 const VIEW=CANVAS.getContext('2d')
-const WIDTH=window.innerWidth
-const HEIGHT=window.innerHeight
 const HEXSIZE=20
+const WATER=[0,0,255]
+const GROUND=[128,0,0]
+const MOUNTAIN=[128,128,128]
 
 class Hex{//im too dumb to do hexes... T_T
   constructor(x,y){
@@ -30,30 +32,46 @@ class Hex{//im too dumb to do hexes... T_T
 var hexes=[]
 var data=[]
 
-function paint(x,y,red,green,blue){
-  let i=(y*WIDTH+x)*4
-  data.data[i+0]=red
-  data.data[i+1]=green
-  data.data[i+2]=blue
+function paint(x,y,color){
+  let i=(y*engine.world.width+x)*4
+  data.data[i+0]=color[0]
+  data.data[i+1]=color[1]
+  data.data[i+2]=color[2]
   data.data[i+3]=255
 }
 
-function validate(x,y){return 0<=x&&x<WIDTH&&0<=y&&y<HEIGHT}
+function validate(x,y){
+  let w=engine.world
+  return 0<=x&&x<w.width&&0<=y&&y<w.height
+}
 
 function follow(event){summary.show(hexes.find(h=>h.enter(event.clientX,event.clientY)))}
 
-export function setup(){
-  CANVAS.setAttribute('width',WIDTH)
-  CANVAS.setAttribute('height',HEIGHT)
-  data=VIEW.getImageData(0,0,WIDTH,HEIGHT)
+export function draw(){
+  let w=engine.world
+  for(let cell of w.iterate()){
+    let color=GROUND
+    if(cell.flooded) color=WATER
+    else if(cell.elevation>=.6) color=MOUNTAIN
+    paint(cell.x,cell.y,color)
+  }
   VIEW.putImageData(data,0,0)
+  for(let h of hexes) h.draw()
+}
+
+export function setup(){
+  let world=engine.world
+  let w=world.width
+  let h=world.height
+  CANVAS.setAttribute('width',w)
+  CANVAS.setAttribute('height',h)
   let step=HEXSIZE*2-5
-  for(let y=0;y<HEIGHT;y+=step)
-    for(let x=0;x<WIDTH;x+=HEXSIZE*2){
-      let other=y/(step)%2
-      let h=new Hex(x-(other?HEXSIZE:0),y)
-      h.draw()
-      hexes.push(h)
-    }
+  for(let y=0;y<h;y+=step) for(let x=0;x<w;x+=HEXSIZE*2){
+    let other=y/(step)%2
+    let h=new Hex(x-(other?HEXSIZE:0),y)
+    hexes.push(h)
+  }
   document.body.onmousemove=follow
+  data=VIEW.getImageData(0,0,w,h)
+  draw()
 } 
