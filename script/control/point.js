@@ -7,9 +7,9 @@ export class Point{
   }
   
   distance(point){
-    let x=Math.abs(point.x-this.x)
-    let y=Math.abs(point.y-this.y)
-    return Math.max(x,y)
+    let x=point.x-this.x
+    let y=point.y-this.y
+    return Math.sqrt(x*x+y*y)
   }
   
   validate(rangex,rangey){
