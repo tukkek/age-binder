@@ -7,10 +7,9 @@ export var world=new worldm.World(window.innerWidth,window.innerHeight)
 function tick(){
   world.live()
   map.draw()
-  setTimeout(tick,100)
 }
 
 export function setup(){
   map.setup()
-  tick()
+  setInterval(tick,100)
 }

@@ -4,9 +4,10 @@ import * as engine from '../control/engine.js'
 const CANVAS=document.querySelector('canvas#map')
 const VIEW=CANVAS.getContext('2d')
 const HEXSIZE=20
-const WATER=[0,0,255]
+const SEA=[0,0,255]
 const GROUND=[128,0,0]
 const MOUNTAIN=[128,128,128]
+const RIVER=[0,128,255]
 
 class Hex{//im too dumb to do hexes... T_T
   constructor(x,y){
@@ -51,8 +52,9 @@ export function draw(){
   let w=engine.world
   for(let cell of w.iterate()){
     let color=GROUND
-    if(cell.flooded) color=WATER
-    else if(cell.elevation>=.6) color=MOUNTAIN
+    if(cell.sea) color=SEA
+    else if(cell.river) color=RIVER
+    else if(cell.mountain) color=MOUNTAIN
     paint(cell.x,cell.y,color)
   }
   VIEW.putImageData(data,0,0)

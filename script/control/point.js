@@ -16,6 +16,15 @@ export class Point{
     return rangex[0]<=this.x&&this.x<rangex[1]&&
             rangey[0]<=this.y&&this.y<rangey[1]
   }
+  
+  clone(){return new Point(this.x,this.y)}
+  
+  equals(point){return point.x==this.x&&point.y==this.y}
+  
+  expand(radius=1){
+    let r=radius
+    return area([this.x-r,this.x+r+1],[this.y-r,this.y+r+1]).filter(p=>!p.equals(this))
+  }
 }
 
 export function* iterate(xrange,yrange){

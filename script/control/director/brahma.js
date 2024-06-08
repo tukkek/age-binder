@@ -6,11 +6,13 @@ class Brahma extends director.Director{
   constructor(){
     super()
     this.peaks=[]
+    this.rivers=[]
   }
   
   deform(pointp,amount){
-    let p=pointp
+    if(amount==0) return
     let w=this.world
+    let p=pointp
     let area=point.area([p.x-100,p.x+100+1],[p.y-100,p.y+100+1])
     area=area.filter(a=>a.validate([0,w.width],[0,w.height]))
     for(let cell of area.map(a=>w.grid[a.x][a.y]))
@@ -23,12 +25,7 @@ class Brahma extends director.Director{
     let width=w.width
     let height=w.height
     while(rpg.chance(2)) peaks.push(point.random([0,width],[0,height]))
-    for(let p of peaks) this.deform(p,.01)
-    
-//     for(let border of w.iterate())
-//       if(a=>border.x==0||border.y==0)
-//         this.deform(border.point,-.02)
-        
+    for(let p of peaks) this.deform(p,rpg.roll(0,2)/100)
     let xborder=width/20
     let yborder=height/20
     for(let x=0;x<xborder;x++) for(let y=0;y<height;y++)
@@ -41,9 +38,33 @@ class Brahma extends director.Director{
         cell.elevation-=.01*(yborder-y)/yborder
         if(cell.elevation<0) cell.elevation=0
       }
-        
-//     if(w.age%10==0)
-//       this.log(w.area().reduce((a,b)=>a.elevation>b.elevation?a:b).elevation)
+  }
+  
+  flood(){
+    let rivers=this.rivers
+    let w=this.world
+    if(rpg.chance(2)){
+      let mountains=w.area.filter(cell=>cell.mountain)
+      if(mountains.length==0) return
+      rivers.push(rpg.pick(mountains))
+    }
+    let height=w.height
+    let width=w.width
+    let g=w.grid
+    for(let i=0;i<rivers.length;i++) for(let j=0;j<1000;j++){
+      let r=rivers[i]
+      if(r.sea) break
+      let neighbors=r.point.expand()
+        .filter(p=>p.validate([0,width],[0,height]))
+        .map(p=>g[p.x][p.y])
+        .filter(cell=>!cell.river)
+      if(neighbors.length==0) break
+      r.river=true
+//       for(let cell of r.point.expand().map(p=>g[p.x][p.y]))
+//         cell.river=true
+      rivers[i]=rpg.shuffle(neighbors)
+                  .reduce((a,b)=>a.elevation<b.elevation?a:b)
+    }
   }
   
   play(){
@@ -52,6 +73,7 @@ class Brahma extends director.Director{
     w.year=1
     super.play()
     this.rise()
+    this.flood()
   }
 }
 

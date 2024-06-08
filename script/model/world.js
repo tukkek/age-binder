@@ -8,19 +8,22 @@ const AGE=100_000//years
 class Cell{
   constructor(x,y){
     this.elevation=0
+    this.river=false
     this.x=x
     this.y=y
   }
   
-  get flooded(){return this.elevation<=.2}
+  get sea(){return this.elevation<=.2}
   
   get point(){return new point.Point(this.x,this.y)}
+  
+  get mountain(){return this.elevation>=.6}
 }
 
 export class World{
   constructor(width,height){
     this.grid=Array.from(new Array(width),()=>new Array(height))
-    this.age=-rpg.max(1,100)
+    this.age=-rpg.high(50,100)
     this.height=height
     this.width=width
     this.year=1
@@ -42,5 +45,5 @@ export class World{
     director.play()
   }
   
-  area(){return Array.from(this.iterate())}
+  get area(){return Array.from(this.iterate())}
 }
