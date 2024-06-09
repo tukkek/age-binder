@@ -73,7 +73,6 @@ class Brahma extends director.Director{
     let w=this.world
     w.age+=1
     w.year=1
-    super.play()
     this.rise()
     this.flood()
   }

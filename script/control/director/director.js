@@ -6,10 +6,7 @@ export class Director{
     return
   }
   
-  play(){
-    let w=this.world
-    this.log(`Year ${w.year} of age ${w.age}...`)
-  }
+  play(){throw 'unimplemented'}
   
   get world(){return engine.world}
   

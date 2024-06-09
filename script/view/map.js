@@ -9,8 +9,6 @@ const GROUND=[128,0,0]
 const MOUNTAIN=[128,128,128]
 const RIVER=[0,128,255]
 
-var lastupdate=[-9000,-9000]//age,year
-
 class Hex{//im too dumb to do hexes... T_T
   constructor(x,y){
     this.x=x
@@ -34,6 +32,7 @@ class Hex{//im too dumb to do hexes... T_T
 
 var hexes=[]
 var data=[]
+var width=-1
 
 function paint(x,y,color){
   let i=(y*engine.world.width+x)*4
@@ -52,10 +51,6 @@ function follow(event){summary.show(hexes.find(h=>h.enter(event.clientX,event.cl
 
 export function draw(){
   let w=engine.world
-  let now=[w.age,w.year]
-  if(!(now[0]>lastupdate[0]||now[1]>lastupdate[1]))
-    return
-  lastupdate=now
   for(let cell of w.iterate()){
     let color=GROUND
     if(cell.sea) color=SEA

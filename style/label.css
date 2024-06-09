@@ -1,0 +1,22 @@
+div:has(> #label){
+  position:fixed;
+  bottom:1em;
+  display:grid;
+  justify-items:center;
+  width:100%;
+}
+#label{
+  background-color:ivory;
+  border-radius:1em;
+  padding:.2em .5em;
+  margin:auto 0;
+  border:.1em solid lightgrey;
+}
+#label .name{
+  font-weight:bold;
+  font-style:italic;
+  cursor:pointer;
+}
+#label .pulse{
+  color:gray;
+}

@@ -32,8 +32,10 @@ export class World{
   }
   
   *iterate(){
-    for(let p of point.iterate([0,this.width],[0,this.height])) 
-      yield this.grid[p.x][p.y]
+    let w=this.width
+    let h=this.height
+    for(let x=0;x<w;x++) for(let y=0;y<h;y++) 
+      yield this.grid[x][y]
   }
   
   live(){
