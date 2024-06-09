@@ -13,10 +13,12 @@ class Brahma extends director.Director{
     if(amount==0) return
     let w=this.world
     let p=pointp
-    let area=point.area([p.x-100,p.x+100+1],[p.y-100,p.y+100+1])
-    area=area.filter(a=>a.validate([0,w.width],[0,w.height]))
-    for(let cell of area.map(a=>w.grid[a.x][a.y]))
+    let x=[Math.max(0,p.x-100),Math.min(p.x+100+1,w.width)]
+    let y=[Math.max(0,p.y-100),Math.min(p.y+100+1,w.height)]
+    for(let cell of point.iterate(x,y)){
+      cell=w.grid[cell.x][cell.y]
       cell.elevation+=amount/(p.distance(cell.point)/10+1)
+    }
   }
   
   rise(){

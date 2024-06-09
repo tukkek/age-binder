@@ -27,9 +27,11 @@ export class Point{
   }
 }
 
-export function* iterate(xrange,yrange){
-  for(let x=xrange[0];x<xrange[1];x++) 
-    for(let y=yrange[0];y<yrange[1];y++) 
+export function *iterate(xrange,yrange){
+  let tox=xrange[1]//jit
+  let toy=yrange[1]//jit
+  for(let x=xrange[0];x<tox;x++) 
+    for(let y=yrange[0];y<toy;y++) 
       yield new Point(x,y)
 }
 
