@@ -21,11 +21,12 @@ class Cell{
 }
 
 export class World{
-  constructor(width,height){
+  constructor(name,width,height){
     this.grid=Array.from(new Array(width),()=>new Array(height))
     this.age=-rpg.high(50,100)
     this.height=height
     this.width=width
+    this.name=name
     this.year=1
     for(let p of point.iterate([0,this.width],[0,this.height]))
       this.grid[p.x][p.y]=new Cell(p.x,p.y)

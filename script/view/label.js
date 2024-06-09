@@ -5,12 +5,16 @@ const VIEW=document.querySelector('#label')
 const ELEMENTS=VIEW.querySelectorAll('span')
 const NAME=ELEMENTS[0]
 
-
 function rename(){
-  NAME.textContent=window.prompt('World name?',NAME.textContent)
+  let w=engine.world
+  w.name=window.prompt('World name?',w.name)
+  NAME.textContent=w.name
 }
 
-export function setup(){NAME.onclick=rename}
+export function setup(){
+  NAME.onclick=rename
+  NAME.textContent=engine.world.name
+}
 
 export function update(){
   let w=engine.world
