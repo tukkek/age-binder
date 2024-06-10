@@ -6,18 +6,28 @@ import * as shiva from '../control/director/shiva.js'
 const AGE=100_000//years
 
 class Cell{
-  constructor(x,y){
+  constructor(x,y,world){
+    this.point=new point.Point(x,y)
     this.elevation=0
+    this.fertility=0
     this.river=false
     this.x=x
     this.y=y
+    let position=y/world.height
+    this.pole=!(.2<=position&&position<.8)
   }
   
   get sea(){return this.elevation<=.2}
   
-  get point(){return new point.Point(this.x,this.y)}
-  
   get mountain(){return this.elevation>=.6}
+  
+  get wet(){return this.fertility>=.8}
+  
+  get dry(){return this.fertility<=.2}
+  
+  get land(){return !(this.sea||this.river)}
+  
+  get ice(){return this.pole&&((this.x+this.y)%3!=0)}
 }
 
 export class World{
@@ -29,7 +39,7 @@ export class World{
     this.name=name
     this.year=1
     for(let p of point.iterate([0,this.width],[0,this.height]))
-      this.grid[p.x][p.y]=new Cell(p.x,p.y)
+      this.grid[p.x][p.y]=new Cell(p.x,p.y,this)
   }
   
   *iterate(){

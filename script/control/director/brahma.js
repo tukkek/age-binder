@@ -2,6 +2,9 @@ import * as director from './director.js'
 import * as point from '../point.js'
 import * as rpg from '../rpg.js'
 
+const BASELINE=1000*700
+const SPIKES=(window.innerWidth*window.innerHeight)/2/BASELINE
+
 class Brahma extends director.Director{
   constructor(){
     super()
@@ -26,7 +29,9 @@ class Brahma extends director.Director{
     let w=this.world
     let width=w.width
     let height=w.height
-    while(rpg.chance(2)) peaks.push(point.random([0,width],[0,height]))
+    let spikes=SPIKES<1&&rpg.random(SPIKES)?1:SPIKES//TODO test higher resolution
+    for(let i=0;i<spikes;i++) 
+      peaks.push(point.random([0,width],[0,height]))
     for(let p of peaks) this.deform(p,rpg.roll(0,2)/100)
     let xborder=width/20
     let yborder=height/20
@@ -62,10 +67,43 @@ class Brahma extends director.Director{
         .filter(cell=>!cell.river)
       if(neighbors.length==0) break
       r.river=true
-//       for(let cell of r.point.expand().map(p=>g[p.x][p.y]))
-//         cell.river=true
       rivers[i]=rpg.shuffle(neighbors)
                   .reduce((a,b)=>a.elevation<b.elevation?a:b)
+    }
+  }
+  
+  //returns 0% at poles, 100% at tropic
+  weather(position){return Math.abs(1-(Math.abs(position-.5)/.5))}
+  
+  rain(){
+    let CLOUDS=10//TODO
+    let RAIN=3/(CLOUDS*CLOUDS)
+    let w=this.world
+    let width=w.width
+    let height=w.height
+    for(let x=0;x<width;x++) for(let y=0;y<height;y++){
+      let cell=w.grid[x][y]
+      if(!cell.land) continue
+      let f=0
+      let tox=Math.min(x+CLOUDS,width)
+      let toy=Math.min(y+CLOUDS,height)
+      for(let x2=Math.max(0,x-CLOUDS);x2<tox;x2++)
+        for(let y2=Math.max(0,y-CLOUDS);y2<toy;y2++){
+          let cell2=w.grid[x2][y2]
+          if(cell2==cell) continue
+          let rain=0
+          if(cell2.sea) rain=1
+          else if(cell2.river) rain=10
+          else if(cell2.wet) rain=cell2.fertility*2/3
+          else continue
+          f+=RAIN*rain/(cell.point.distance(cell2.point))
+        }
+//       let  weather=1+(this.weather(y/height)-.5)*.1/.5
+      let weather=1+this.weather(y/height)/3
+      f*=weather
+      f=(2*f+.5)/3
+      if(f>1) f=1
+      cell.fertility=f
     }
   }
   
@@ -75,6 +113,7 @@ class Brahma extends director.Director{
     w.year=1
     this.rise()
     this.flood()
+    this.rain()
   }
 }
 

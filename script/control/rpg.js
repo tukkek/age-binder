@@ -17,3 +17,5 @@ export function shuffle(array){
   }
   return array
 }
+
+export function random(chance){return Math.random()<chance}

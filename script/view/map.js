@@ -5,9 +5,12 @@ const CANVAS=document.querySelector('canvas#map')
 const VIEW=CANVAS.getContext('2d')
 const HEXSIZE=20
 const SEA=[0,0,255]
-const GROUND=[128,0,0]
+const GROUND=[64,192,64]
 const MOUNTAIN=[128,128,128]
 const RIVER=[0,128,255]
+const DRY=[192,192,0]
+const WET=[0,128,0]
+const ICE=[256,256,256]
 
 class Hex{//im too dumb to do hexes... T_T
   constructor(x,y){
@@ -17,10 +20,10 @@ class Hex{//im too dumb to do hexes... T_T
   
   draw(){
     VIEW.lineWidth=1
-    VIEW.strokeStyle='gray'
+    VIEW.strokeStyle='black'
     VIEW.beginPath()
     VIEW.arc(this.x,this.y,HEXSIZE,0,2*Math.PI,false)
-    VIEW.setLineDash([1,3])
+    VIEW.setLineDash([1,2])
     VIEW.stroke()
   }
   
@@ -54,8 +57,11 @@ export function draw(){
   for(let cell of w.iterate()){
     let color=GROUND
     if(cell.sea) color=SEA
+    else if(cell.ice) color=ICE
     else if(cell.river) color=RIVER
     else if(cell.mountain) color=MOUNTAIN
+    else if(cell.wet) color=WET
+    else if(cell.dry) color=DRY
     paint(cell.x,cell.y,color)
   }
   VIEW.putImageData(data,0,0)
@@ -69,7 +75,7 @@ export function setup(){
   CANVAS.setAttribute('width',w)
   CANVAS.setAttribute('height',h)
   let step=HEXSIZE*2-5
-  for(let y=0;y<h;y+=step) for(let x=0;x<w;x+=HEXSIZE*2){
+  for(let y=0;y<h+step;y+=step) for(let x=0;x<w;x+=HEXSIZE*2){
     let other=y/(step)%2
     let h=new Hex(x-(other?HEXSIZE:0),y)
     hexes.push(h)
