@@ -10,7 +10,8 @@ Create your own worlds here: https://tukkek.github.io/age-binder/!
 
 - Generate an infinite number of detailed worlds, for free, in your browser!
 - Watch your worlds evolve age-by-age, year-by-year while history unfolds!
-- Hover over each area of the game world for an overview of local details
+- Hove over each area of the game world for an overview of local details
+- Reproduce previous worlds by entering the same name again
 
 ## Performance
 

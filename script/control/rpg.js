@@ -1,4 +1,6 @@
-export function roll(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+var rng=Math.random
+
+export function roll(min,max){return Math.floor(rng()*(max-min+1))+min}
 
 export function pick(array){return array[roll(0,array.length-1)]}
 
@@ -18,4 +20,6 @@ export function shuffle(array){
   return array
 }
 
-export function random(chance){return Math.random()<chance}
+export function random(chance){return rng()<chance}
+
+export function seed(s){rng=new alea(s)}
