@@ -74,9 +74,6 @@ class Brahma extends director.Director{
     }
   }
   
-  //returns 0% at poles, 100% at tropic
-  weather(position){return Math.abs(1-(Math.abs(position-.5)/.5))}
-  
   rain(){
     let CLOUDS=20//TODO
     let RAIN=3/(CLOUDS*CLOUDS)
@@ -100,8 +97,7 @@ class Brahma extends director.Director{
           else continue
           f+=RAIN*rain/(cell.point.distance(cell2.point))
         }
-      let weather=1+this.weather(y/height)/3
-      f*=weather
+      f*=1+cell.weather/3
       f=(2*f+.5)/3
       if(f>1) f=1
       cell.fertility=f

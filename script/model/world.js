@@ -13,8 +13,10 @@ class Cell{
     this.river=false
     this.x=x
     this.y=y
-    let position=y/world.height
-    this.pole=!(.2<=position&&position<.8)
+    let longitude=y/world.height
+    let l=longitude
+    this.pole=!(.2<=l&&l<.8)
+    this.weather=Math.abs(1-(Math.abs(l-.5)/.5))//0=poles 1=tropic
   }
   
   get sea(){return this.elevation<=.2}
