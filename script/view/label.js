@@ -22,5 +22,6 @@ export function update(){
   ELEMENTS[2].textContent=w.age
   if(!debug.debug) return
   let p=engine.pulse
-  ELEMENTS[3].textContent=` (${p[1]-p[0]}ms)`
+  p=(p[1]-p[0])/1000
+  ELEMENTS[3].textContent=` (${Math.round(p*10)/10}s)`
 }

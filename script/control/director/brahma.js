@@ -4,7 +4,8 @@ import * as rpg from '../rpg.js'
 
 const BASELINE=1000*700
 const SPIKES=(window.innerWidth*window.innerHeight)/2/BASELINE
-
+const TREMORS=[0,1,2].map(t=>t/100)
+  
 class Brahma extends director.Director{
   constructor(){
     super()
@@ -33,7 +34,7 @@ class Brahma extends director.Director{
     if(rpg.random(SPIKES-spikes)) spikes+=1
     for(let i=0;i<spikes;i++) 
       peaks.push(point.random([0,width],[0,height]))
-    for(let p of peaks) this.deform(p,rpg.roll(0,2)/100)
+    for(let p of peaks) this.deform(p,rpg.pick(TREMORS))
     let xborder=width/20
     let yborder=height/20
     for(let x=0;x<xborder;x++) for(let y=0;y<height;y++)
@@ -51,7 +52,7 @@ class Brahma extends director.Director{
   flood(){
     let rivers=this.rivers
     let w=this.world
-    if(rpg.chance(2)){
+    while(rpg.chance(2)){
       let mountains=w.area.filter(cell=>cell.mountain)
       if(mountains.length==0) return
       rivers.push(rpg.pick(mountains))
@@ -77,7 +78,7 @@ class Brahma extends director.Director{
   weather(position){return Math.abs(1-(Math.abs(position-.5)/.5))}
   
   rain(){
-    let CLOUDS=10//TODO
+    let CLOUDS=20//TODO
     let RAIN=3/(CLOUDS*CLOUDS)
     let w=this.world
     let width=w.width
@@ -93,9 +94,9 @@ class Brahma extends director.Director{
           let cell2=w.grid[x2][y2]
           if(cell2==cell) continue
           let rain=0
-          if(cell2.sea) rain=1
+          if(cell2.sea) rain=5
           else if(cell2.river) rain=10
-          else if(cell2.wet) rain=cell2.fertility*2/3
+          else if(cell2.wet) rain=cell2.fertility*(1-.1)
           else continue
           f+=RAIN*rain/(cell.point.distance(cell2.point))
         }
