@@ -60,3 +60,12 @@ export class World{
   
   get area(){return Array.from(this.iterate())}
 }
+
+class Rivers{
+  constructor(){
+    this.river='river'
+    this.oasis='oasis'
+  }
+}
+
+export var rivers=new Rivers()

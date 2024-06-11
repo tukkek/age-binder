@@ -1,10 +1,12 @@
 import * as director from './director.js'
 import * as point from '../point.js'
 import * as rpg from '../rpg.js'
+import * as world from '../../model/world.js'
 
 const BASELINE=1000*700
 const SPIKES=(window.innerWidth*window.innerHeight)/2/BASELINE
 const TREMORS=[0,1,2].map(t=>t/100)
+const OASIS=1_000*50//1:1,000 earth ratio X 50 years
   
 class Brahma extends director.Director{
   constructor(){
@@ -68,7 +70,7 @@ class Brahma extends director.Director{
         .map(p=>g[p.x][p.y])
         .filter(cell=>!cell.river)
       if(neighbors.length==0) break
-      r.river=true
+      r.river=world.rivers.river
       rivers[i]=rpg.shuffle(neighbors)
                   .reduce((a,b)=>a.elevation<b.elevation?a:b)
     }
@@ -83,6 +85,10 @@ class Brahma extends director.Director{
     for(let x=0;x<width;x++) for(let y=0;y<height;y++){
       let cell=w.grid[x][y]
       if(!cell.land) continue
+      if(cell.dry&&rpg.chance(OASIS)){
+        cell.river=world.rivers.oasis
+        continue
+      } 
       let f=0
       let tox=Math.min(x+CLOUDS,width)
       let toy=Math.min(y+CLOUDS,height)
