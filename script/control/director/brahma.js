@@ -30,7 +30,7 @@ class Brahma extends director.Director{
     let w=this.world
     let width=w.width
     let height=w.height
-    let spikes=Math.floor(SPIKES) //TODO test higher resolution
+    let spikes=Math.floor(SPIKES)
     if(rpg.random(SPIKES-spikes)) spikes+=1
     for(let i=0;i<spikes;i++) 
       peaks.push(point.random([0,width],[0,height]))
