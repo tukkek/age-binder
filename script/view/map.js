@@ -8,8 +8,8 @@ const SEA=[0,0,255]
 const GROUND=[64,192,64]
 const MOUNTAIN=[128,128,128]
 const WATER=[0,128,255]
-const DRY=[192,192,0]
-const WET=[0,128,0]
+const FOREST=[0,128,0]
+const DESERT=[192,192,0]
 const ICE=[256,256,256]
 
 class Hex{//im too dumb to do hexes... T_T
@@ -60,8 +60,8 @@ export function draw(){
     else if(cell.ice&&((cell.x+cell.y)%3!=0)) color=ICE
     else if(cell.water) color=WATER
     else if(cell.mountain) color=MOUNTAIN
-    else if(cell.wet) color=WET
-    else if(cell.dry) color=DRY
+    else if(cell.forest) color=FOREST
+    else if(cell.desert) color=DESERT
     paint(cell.x,cell.y,color)
   }
   VIEW.putImageData(data,0,0)

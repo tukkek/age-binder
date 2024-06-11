@@ -87,7 +87,7 @@ class Brahma extends director.Director{
     for(let x=0;x<width;x++) for(let y=0;y<height;y++){
       let cell=w.grid[x][y]
       if(!cell.land) continue
-      if(cell.dry&&rpg.chance(OASIS)){
+      if(cell.desert&&rpg.chance(OASIS)){
         cell.water=world.waters.oasis
         continue
       } 
@@ -101,7 +101,7 @@ class Brahma extends director.Director{
           let rain=0
           if(cell2.sea||cell2.water==shore) rain=5
           else if(cell2.water) rain=10
-          else if(cell2.wet) rain=cell2.fertility*(1-.1)
+          else if(cell2.forest) rain=cell2.fertility*(1-.1)
           else continue
           f+=RAIN*rain/(cell.point.distance(cell2.point))
         }

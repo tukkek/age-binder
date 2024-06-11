@@ -23,9 +23,9 @@ class Cell{
   
   get mountain(){return this.elevation>=.6}
   
-  get wet(){return this.fertility>=.8}
+  get forest(){return this.fertility>=.8}
   
-  get dry(){return this.fertility<=.2}
+  get desert(){return this.fertility<=.2}
   
   get land(){return !(this.sea||this.water)}
 }
