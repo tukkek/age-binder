@@ -12,7 +12,7 @@ function show(hide=false){VIEW.parentNode.classList.toggle('hidden',hide)}
 
 function promise(callbackp){
   callback=callbackp
-  if(debug.debug) callbackp(name.get())
+  if(debug.on) callbackp(name.get())
 }
 
 export async function get(){return new Promise(promise)}
@@ -29,7 +29,7 @@ function type(){
 
 export async function setup(){
   await name.setup()
-  if(debug.debug) return
+  if(debug.on) return
   let names=new Set()
   while(names.size<AMOUNT) names.add(name.get())
   let children=VIEW.children

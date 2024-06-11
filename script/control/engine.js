@@ -23,7 +23,7 @@ function update(){
 
 function tick(){
   world.live()
-  if(debug.debug) pulse=[pulse[1],new Date().getTime()]
+  if(debug.on) pulse=[pulse[1],new Date().getTime()]
 }
 
 export async function setup(){
