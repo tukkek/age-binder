@@ -1,9 +1,9 @@
 //TODO import * as character from '../model/character.js'
 import * as map from '../view/map.js'
 import * as label from '../view/label.js'
+import * as names from '../view/names.js'
 import * as worldm from '../model/world.js'
 import * as debug from './debug.js'
-import * as name from './name.js'
 
 export var pulse=new Array(2).fill(new Date().getTime())
 export var world=false
@@ -28,9 +28,10 @@ function tick(){
 }
 
 export async function setup(){
-  await name.setup()
+  await names.setup()
+  let n=await names.get()
   let size=[window.innerWidth,window.innerHeight]
-  world=new worldm.World(name.get(),size[0],size[1])
+  world=new worldm.World(n,size[0],size[1])
   map.setup()
   label.setup()
   setInterval(tick,100)

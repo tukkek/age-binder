@@ -82,5 +82,6 @@ export function setup(){
   }
   document.body.onmousemove=follow
   data=VIEW.getImageData(0,0,w,h)
+  CANVAS.classList.remove('hidden')
   draw()
 } 

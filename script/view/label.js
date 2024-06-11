@@ -14,6 +14,7 @@ function rename(){
 export function setup(){
   NAME.onclick=rename
   NAME.textContent=engine.world.name
+  VIEW.classList.remove('hidden')
 }
 
 export function update(){

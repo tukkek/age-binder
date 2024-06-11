@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <title>Age Binder</title>
-<link rel='stylesheet' href='style/map.css'>
+<link rel='stylesheet' href='style/engine.css'>
 <link rel='stylesheet' href='style/label.css'>
+<link rel='stylesheet' href='style/names.css'>
 
 <div>
-  <div id='label'><span class='name'>Name world</span>, year <span>?</span> of age <span>???</span><span class='pulse'></span>.</div>
+  <div id='label' class='hidden'><span class='name'>Name world</span>, year <span>?</span> of age <span>???</span><span class='pulse'></span>.</div>
 </div>
-<canvas id='map'></canvas>
+
+<canvas id='map' class='hidden'></canvas>
+
+<div class='hidden'>
+  <div id='names'>
+    <div>Choose a name for your new world:</div>
+    <template id='name'><div class='name'>Loading...</div></template>
+    <div><input placeholder='Or type your custom name...'><button>Enter</button></div>
+  </div>
+</div>
 
 <script type='module'>
   import * as engine from './script/control/engine.js'
