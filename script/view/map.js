@@ -57,7 +57,7 @@ export function draw(){
   for(let cell of w.iterate()){
     let color=GROUND
     if(cell.sea) color=SEA
-    else if(cell.ice) color=ICE
+    else if(cell.ice&&((cell.x+cell.y)%3!=0)) color=ICE
     else if(cell.river) color=RIVER
     else if(cell.mountain) color=MOUNTAIN
     else if(cell.wet) color=WET

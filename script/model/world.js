@@ -15,7 +15,7 @@ class Cell{
     this.y=y
     let longitude=y/world.height
     let l=longitude
-    this.pole=!(.2<=l&&l<.8)
+    this.ice=!(.2<=l&&l<.8)
     this.weather=Math.abs(1-(Math.abs(l-.5)/.5))//0=poles 1=tropic
   }
   
@@ -28,8 +28,6 @@ class Cell{
   get dry(){return this.fertility<=.2}
   
   get land(){return !(this.sea||this.river)}
-  
-  get ice(){return this.pole&&((this.x+this.y)%3!=0)}
 }
 
 export class World{
