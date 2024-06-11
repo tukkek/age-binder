@@ -29,7 +29,8 @@ class Brahma extends director.Director{
     let w=this.world
     let width=w.width
     let height=w.height
-    let spikes=SPIKES<1&&rpg.random(SPIKES)?1:SPIKES//TODO test higher resolution
+    let spikes=Math.floor(SPIKES) //TODO test higher resolution
+    if(rpg.random(SPIKES-spikes)) spikes+=1
     for(let i=0;i<spikes;i++) 
       peaks.push(point.random([0,width],[0,height]))
     for(let p of peaks) this.deform(p,rpg.roll(0,2)/100)
@@ -98,7 +99,6 @@ class Brahma extends director.Director{
           else continue
           f+=RAIN*rain/(cell.point.distance(cell2.point))
         }
-//       let  weather=1+(this.weather(y/height)-.5)*.1/.5
       let weather=1+this.weather(y/height)/3
       f*=weather
       f=(2*f+.5)/3
