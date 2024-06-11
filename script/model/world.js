@@ -65,6 +65,7 @@ class Rivers{
   constructor(){
     this.river='river'
     this.oasis='oasis'
+    this.shore='shore'
   }
 }
 

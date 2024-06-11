@@ -59,6 +59,7 @@ class Brahma extends director.Director{
       if(mountains.length==0) return
       rivers.push(rpg.pick(mountains))
     }
+    let river=world.rivers.river
     let height=w.height
     let width=w.width
     let g=w.grid
@@ -68,7 +69,7 @@ class Brahma extends director.Director{
       let neighbors=r.point.expand()
         .filter(p=>p.validate([0,width],[0,height]))
         .map(p=>g[p.x][p.y])
-        .filter(cell=>!cell.river)
+        .filter(cell=>cell.river!=river)
       if(neighbors.length==0) break
       r.river=world.rivers.river
       rivers[i]=rpg.shuffle(neighbors)
@@ -77,6 +78,7 @@ class Brahma extends director.Director{
   }
   
   rain(){
+    let shore=world.rivers.shore
     let CLOUDS=20//TODO
     let RAIN=3/(CLOUDS*CLOUDS)
     let w=this.world
@@ -97,7 +99,7 @@ class Brahma extends director.Director{
           let cell2=w.grid[x2][y2]
           if(cell2==cell) continue
           let rain=0
-          if(cell2.sea) rain=5
+          if(cell2.sea||cell.river==shore) rain=5
           else if(cell2.river) rain=10
           else if(cell2.wet) rain=cell2.fertility*(1-.1)
           else continue
@@ -110,6 +112,28 @@ class Brahma extends director.Director{
     }
   }
   
+  crash(){
+    let shore=world.rivers.shore
+    let w=this.world
+    let width=w.width-1
+    let height=w.height-1
+    let g=w.grid
+    for(let x=1;x<width;x++) for(let y=1;y<height;y++){
+      let cell=g[x][y]
+      if(cell.sea) continue
+      let r=cell.river
+      if(r){
+        if(r==shore) cell.river=false
+        else continue
+      }
+      let sea=false
+      for(let x2=x-1;x2<x+2&&!sea;x2++)
+        for(let y2=y-1;y2<y+2&&!sea;y2++)
+          if(g[x2][y2].sea) sea=true
+      if(sea) cell.river=shore
+    }
+  }
+  
   play(){
     let w=this.world
     w.age+=1
@@ -117,6 +141,7 @@ class Brahma extends director.Director{
     this.rise()
     this.flood()
     this.rain()
+    this.crash()
   }
 }
 
