@@ -18,10 +18,10 @@ export function setup(){
 
 export function update(){
   let w=engine.world
-  ELEMENTS[1].textContent=w.year
-  ELEMENTS[2].textContent=w.age
+  ELEMENTS[1].textContent=w.year.toLocaleString()
+  ELEMENTS[2].textContent=w.age.toLocaleString()
   if(!debug.debug) return
   let p=engine.pulse
   p=(p[1]-p[0])/1000
-  ELEMENTS[3].textContent=` (${Math.round(p*10)/10}s)`
+  ELEMENTS[3].textContent=` (${p.toFixed(1)}s)`
 }
