@@ -18,7 +18,7 @@ function update(){
   if(!(a>lastupdate[0]||y>lastupdate[1])) return
   lastupdate=[w.age,w.year]
   label.update()
-  if(!debug.profile) map.draw()
+  if(!debug.profile||(a==1&&y==1)) map.draw()
 }
 
 function tick(){

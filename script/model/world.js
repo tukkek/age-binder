@@ -1,4 +1,4 @@
-import * as point from '../control/point.js'
+import * as point from './point.js'
 import * as rpg from '../control/rpg.js'
 import * as brahma from '../control/director/brahma.js'
 import * as shiva from '../control/director/shiva.js'

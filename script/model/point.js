@@ -1,4 +1,4 @@
-import * as rpg from './rpg.js'
+import * as rpg from '../control/rpg.js'
 
 export class Point{
   constructor(x=0,y=0){

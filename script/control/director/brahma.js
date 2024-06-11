@@ -1,6 +1,6 @@
 import * as director from './director.js'
-import * as point from '../point.js'
 import * as rpg from '../rpg.js'
+import * as point from '../../model/point.js'
 import * as world from '../../model/world.js'
 
 const BASELINE=1000*700
