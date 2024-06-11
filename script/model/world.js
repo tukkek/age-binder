@@ -10,7 +10,7 @@ class Cell{
     this.point=new point.Point(x,y)
     this.elevation=0
     this.fertility=0
-    this.river=false
+    this.water=false//TODO overview: show all types
     this.x=x
     this.y=y
     let longitude=y/world.height
@@ -27,7 +27,7 @@ class Cell{
   
   get dry(){return this.fertility<=.2}
   
-  get land(){return !(this.sea||this.river)}
+  get land(){return !(this.sea||this.water)}
 }
 
 export class World{
@@ -61,7 +61,7 @@ export class World{
   get area(){return Array.from(this.iterate())}
 }
 
-class Rivers{
+class Waters{
   constructor(){
     this.river='river'
     this.oasis='oasis'
@@ -69,4 +69,4 @@ class Rivers{
   }
 }
 
-export var rivers=new Rivers()
+export var waters=new Waters()
