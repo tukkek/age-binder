@@ -17,6 +17,11 @@ class Cell{
     let l=longitude
     this.ice=!(.2<=l&&l<.8)
     this.weather=Math.abs(1-(Math.abs(l-.5)/.5))//0=poles 1=tropic
+    this.worship=0
+    this.science=0
+    this.trade=0
+    this.food=0
+    this.arms=0
   }
   
   get sea(){return this.elevation<=.2}

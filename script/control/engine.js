@@ -23,7 +23,9 @@ function update(){
 
 function tick(){
   world.live()
-  if(debug.on) pulse=[pulse[1],new Date().getTime()]
+  if(!debug.on) return
+  pulse=[pulse[1],new Date().getTime()]
+  if(world.age>-50) debug.tick()
 }
 
 export async function setup(){
@@ -34,6 +36,10 @@ export async function setup(){
   world=new worldm.World(n,size[0],size[1])
   map.setup()
   label.setup()
+  if(debug.test){
+    debug.test.run()
+    return
+  }
   setInterval(tick,100)
   setInterval(update,1000)
 }
