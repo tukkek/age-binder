@@ -2,11 +2,16 @@ import * as director from './director.js'
 import * as rpg from '../rpg.js'
 import * as point from '../../model/point.js'
 import * as world from '../../model/world.js'
+import * as resource from '../../model/resource.js'
+import * as map from '../../view/map.js'
 
 const BASELINE=1000*700
-const SPIKES=(window.innerWidth*window.innerHeight)/2/BASELINE
+const AREA=window.innerWidth*window.innerHeight
+const SPIKES=AREA/2/BASELINE
 const TREMORS=[0,1,2].map(t=>t/100)
-const OASIS=1_000*50//1:1,000 earth ratio X 50 years
+const AGES=50
+const OASIS=1_000*AGES//earth ratio
+const ENRICH=map.hexcount/(10/2)/AGES
   
 class Brahma extends director.Director{
   constructor(){
@@ -134,6 +139,14 @@ class Brahma extends director.Director{
     }
   }
   
+  enrich(){
+    if(!rpg.random(ENRICH)) return
+    let w=this.world
+    let p=point.random([0,w.width],[0,w.height])
+    let cell=w.grid[p.x][p.y]
+    cell.resource=resource.spawn(cell)
+  }
+  
   play(){
     let w=this.world
     w.age+=1
@@ -142,6 +155,7 @@ class Brahma extends director.Director{
     this.flood()
     this.rain()
     this.crash()
+    this.enrich()
   }
 }
 

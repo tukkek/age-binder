@@ -1,2 +1,3 @@
-* Darius Kazemi's `Corpora` (CC0 license) https://github.com/dariusk/corpora
-* David Bau's `seedrandom.js` (MIT license) https://github.com/davidbau/seedrandom
+* Darius Kazemi's `Corpora` (CC0) https://github.com/dariusk/corpora
+* David Bau's `seedrandom.js` (MIT) https://github.com/davidbau/seedrandom
+* Henrique Lazarini's `496 pixel art icons` (CC0) https://opengameart.org/content/496-pixel-art-icons-for-medievalfantasy-rpg

@@ -22,6 +22,7 @@ class Cell{
     this.trade=0
     this.food=0
     this.arms=0
+    this.resource=false
   }
   
   get sea(){return this.elevation<=.2}

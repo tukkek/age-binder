@@ -1,11 +1,13 @@
 import * as rpg from '../control/rpg.js'
 import * as engine from '../control/engine.js'
+import * as image from '../view/image.js'
 
 const YIELD=10
 
 class Resource{
-  constructor(name){
+  constructor(name,image=false){
     this.name=name
+    this.image=image
   }
   
   use(cell){throw 'unimplemented'}
@@ -56,7 +58,7 @@ class Sea extends Resource{
 
 class Luxury extends Resource{
   constructor(name){
-    super(name)
+    super(name,image.resources.luxury)
   }
   
   use(cell){cell.trade+=YIELD}
@@ -64,7 +66,7 @@ class Luxury extends Resource{
 
 class Focus extends Resource{
   constructor(name){
-    super(name)
+    super(name,image.resources.focus)
   }
   
   use(cell){cell.worship+=YIELD}
@@ -72,7 +74,7 @@ class Focus extends Resource{
 
 class Food extends Resource{
   constructor(name){
-    super(name)
+    super(name,image.resources.food)
   }
   
   use(cell){cell.food+=YIELD}
@@ -80,7 +82,7 @@ class Food extends Resource{
 
 class Material extends Resource{
   constructor(name){
-    super(name)
+    super(name,image.resources.material)
   }
   
   use(cell){cell.arms+=YIELD}
@@ -88,7 +90,7 @@ class Material extends Resource{
 
 class Technology extends Resource{
   constructor(name){
-    super(name)
+    super(name,image.resources.technology)
   }
   
   use(cell){cell.science+=YIELD}
@@ -114,7 +116,7 @@ var all=new Map([//0 is basic (implied)
   [WATER,[new Water(),new Luxury('cotton'),new Focus('amber'),new Food('sugar'),
             new Technology('coal')]],
   [ICE,[false,new Luxury('fur'),new Focus('jade')]],
-  [SEA,[new Sea(),new Focus('pearls')]],
+  [SEA,[new Sea()/*,new Focus('pearls')*/]],
 ])
 
 function locate(cell){
@@ -129,7 +131,7 @@ function locate(cell){
 
 export function inherit(cell){return all.get(locate(cell))[0]}//TODO use
 
-export function spawn(cell){rpg.pick(all.get(locate(cell)).slice(1))}//TODO use
+export function spawn(cell){return rpg.pick(all.get(locate(cell)).slice(1))}//TODO use
 
 /*export function test(cell){
   cell=engine.world.grid[0][0]
