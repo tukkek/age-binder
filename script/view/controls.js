@@ -14,7 +14,15 @@ function click(control,force=false){
   selected.classList.add(SELECTED)
 }
 
-export function setup(){for(let c of CONTROLS) c.onclick=event=>click(c)} 
+function toggle(){
+  if(selected==PLAY) click(PAUSE)
+  else if(selected==PAUSE) click(PLAY)
+}
+
+export function setup(){
+  for(let c of CONTROLS) c.onclick=event=>click(c)
+  window.onkeypress=event=>{if(event.key==' ') toggle()}
+} 
 
 export function play(){
   if(selected==STEP){
