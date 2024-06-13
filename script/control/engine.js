@@ -2,6 +2,7 @@
 import * as map from '../view/map.js'
 import * as label from '../view/label.js'
 import * as names from '../view/names.js'
+import * as controls from '../view/controls.js'
 import * as worldm from '../model/world.js'
 import * as debug from './debug.js'
 import * as rpg from './rpg.js'
@@ -12,6 +13,7 @@ export var world=false
 var lastupdate=[-9000,-9000]
 
 function update(){
+  if(!controls.play()) return
   let w=world
   let y=w.year
   let a=w.age
@@ -22,6 +24,7 @@ function update(){
 }
 
 function tick(){
+  if(!controls.play()) return
   world.live()
   if(!debug.on) return
   pulse=[pulse[1],new Date().getTime()]
@@ -36,6 +39,7 @@ export async function setup(){
   world=new worldm.World(n,size[0],size[1])
   map.setup()
   label.setup()
+  controls.setup()
   if(debug.test){
     debug.test.run()
     return

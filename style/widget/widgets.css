@@ -1,0 +1,10 @@
+#widgets{
+  position:fixed;
+  bottom:1em;
+  display:grid;
+  justify-items:center;
+  width:100%;
+  grid-auto-flow:column;
+  justify-content:center;
+  grid-gap:1em;
+}

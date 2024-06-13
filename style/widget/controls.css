@@ -1,0 +1,16 @@
+#controls{
+  background-color:white;
+  border-radius:1em;
+  padding:.1em .5em;
+  display:grid;
+  grid-auto-flow:column;
+  grid-gap:.5em;
+  font-size:large;
+  font-weight:bold;
+}
+#controls>div{
+  cursor:pointer;
+}
+#controls .selected{
+  color:red;
+}

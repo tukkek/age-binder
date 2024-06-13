@@ -1,20 +1,30 @@
 <!DOCTYPE html>
+
+<meta charset='utf8'/>
+
 <title>Age Binder</title>
 
-<script src="library/seedrandom.alea.min.js"></script>
-
 <link rel='stylesheet' href='style/engine.css'>
-<link rel='stylesheet' href='style/label.css'>
 <link rel='stylesheet' href='style/names.css'>
 <link rel='stylesheet' href='style/map.css'>
 <link rel='stylesheet' href='style/summary.css'>
+<link rel='stylesheet' href='style/widget/label.css'>
+<link rel='stylesheet' href='style/widget/controls.css'>
+<link rel='stylesheet' href='style/widget/widgets.css'>
 
 <div id='icons'>
   <template id='icon'><img class='icon'/></template>
 </div>
 
-<div>
-  <div id='label' class='hidden'><span class='name'>Name world</span>, year <span>?</span> of age <span>???</span><span class='pulse'></span>.</div>
+<div id='widgets'>
+  <div id='label' class='hidden'>
+    <span class='name'>Name world</span>, year <span>?</span> of age <span>???</span><span class='pulse'></span>.
+  </div>
+  <div id='controls'>
+    <div class='play selected'>⏵</div>
+    <div class='pause'>⏸</div>
+    <div class='step'>⏯</div>
+  </div>
 </div>
 
 <canvas id='map' class='hidden'></canvas>
@@ -34,6 +44,7 @@
   </div></template>
 </div>
 
+<script src="library/seedrandom.alea.min.js"></script>
 <script type='module'>
   import * as engine from './script/control/engine.js'
   engine.setup()
