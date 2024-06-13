@@ -4,8 +4,12 @@ const VIEW=document.querySelector('#summary')
 const DETAIL=VIEW.querySelector('template#detail').content.children[0]
 const RESOURCES='resources'
 const ELEVATION='elevation'
-const DETAILS=new Map([ELEVATION,RESOURCES].map(detail=>[detail,false]))
+const BIOME='biome'
+const WATERS='waters'
+const WEATHER='weather'
+const DETAILS=new Map([BIOME,ELEVATION,RESOURCES,WATERS,WEATHER].map(detail=>[detail,false]))
 const RANGE=['very low','low','average','high','very high']
+const WEATHERRANGE=['very cold','cold','temperate','hot','very hot']
 
 var showing=false
 
@@ -22,19 +26,41 @@ function scan(hex,extractor){
   return data[Math.floor(data.length/2)]
 }
 
+function extract(array){
+  let common=[false,0]
+  let count=new Map()
+  for(let a of array){
+    let c=count.get(a)||0
+    c+=1
+    count.set(a,c)
+    if(c>common[1]) common=[a,c]
+  }
+  return common[0]
+}
+
+function collect(all){
+  all=all.filter(a=>a)
+  if(all.length==0) return 'none'
+  all=Array.from(new Set(all))
+  all.sort()
+  return all.join(', ')
+}
+
 export function show(hex){
   setup()
   if(showing==hex) return false
   showing=hex
+  let a=hex.area
   describe(ELEVATION,scan(hex,cell=>cell.elevation))
-  let resources=hex.area.map(cell=>cell.resource)
-                  .filter(r=>r).map(r=>r.name)
-  if(resources.length>0){
-    resources=Array.from(new Set(resources))
-    resources.sort()
-    resources=resources.join(', ')
-  }else resources='none'
-  DETAILS.get(RESOURCES).textContent=resources
+  describe(WEATHER,scan(hex,cell=>cell.weather),WEATHERRANGE)
+  let descriptions=new Map()
+  descriptions.set(BIOME,extract(a.map(cell=>cell.biome)))
+  let resources=a.map(cell=>cell.resource&&cell.resource.name)
+  descriptions.set(RESOURCES,collect(resources))
+  let waters=collect(a.map(cell=>cell.sea?'open sea':cell.water))
+  descriptions.set(WATERS,waters)
+  for(let d of descriptions.keys())
+    DETAILS.get(d).textContent=descriptions.get(d)
 }
 
 export function setup(){

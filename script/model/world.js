@@ -1,5 +1,6 @@
 import * as point from './point.js'
 import * as rpg from '../control/rpg.js'
+import * as biome from '../control/biome.js'
 import * as brahma from '../control/director/brahma.js'
 import * as shiva from '../control/director/shiva.js'
 
@@ -34,6 +35,8 @@ class Cell{
   get desert(){return this.fertility<=.2}
   
   get land(){return !(this.sea||this.water)}
+  
+  get biome(){return biome.get(this)}
 }
 
 export class World{
