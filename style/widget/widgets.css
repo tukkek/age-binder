@@ -9,3 +9,6 @@
   grid-gap:1em;
   pointer-events:none;
 }
+#widgets>div{
+  pointer-events:initial;
+}

@@ -58,9 +58,9 @@ class Hex{//im too dumb to do hexes... T_T
 export var hexcount=300
 export var hexsize=Math.floor(Math.sqrt((window.innerWidth*window.innerHeight)/hexcount/Math.PI))
 
+var width=-1
 var hexes=[]
 var data=[]
-var width=-1
 
 function paint(x,y,color){
   let i=(y*engine.world.width+x)*4

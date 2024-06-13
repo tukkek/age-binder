@@ -10,7 +10,8 @@ class Test{
 
 export var profile=PARAMETERS.has('profile')
 export var test=PARAMETERS.has('test')&&new Test()
-export var on=profile||test||PARAMETERS.has('debug')
+export var saved=PARAMETERS.has('saved')
+export var on=profile||test||saved||PARAMETERS.has('debug')
 
 export function tick(){
   return

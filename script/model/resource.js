@@ -112,7 +112,12 @@ var all=new Map([//0 is basic (implied)
   [biome.sea,[new Sea()/*,new Focus('pearls')*/]],
 ])
 
-
 export function inherit(cell){return all.get(cell.biome)[0]}//TODO use
 
 export function spawn(cell){return rpg.pick(all.get(cell.biome).slice(1))}
+
+export function get(name){
+  for(let k of all.keys()) for(let resource of all.get(k))
+    if(resource.name==name) return resource
+  return false
+}

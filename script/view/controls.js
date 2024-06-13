@@ -1,9 +1,14 @@
+import * as engine from '../control/engine.js'
+import * as debug from '../control/debug.js'
+import * as save from '../control/save.js'
+
 const VIEW=document.querySelector('#controls')
-const CONTROLS=VIEW.children
+const CONTROLS=Array.from(VIEW.children)
 const SELECTED='selected'
 const PAUSE=CONTROLS[1]
 const PLAY=CONTROLS[0]
 const STEP=CONTROLS[2]
+const SAVE=CONTROLS[3]
 
 var selected=PLAY
 
@@ -21,9 +26,12 @@ function toggle(){
 }
 
 export function setup(){
-  VIEW.classList.remove('hidden')
-  for(let c of CONTROLS) c.onclick=event=>click(c)
+  let show=[VIEW]
+  if(debug.on) show.push(SAVE)
+  for(let s of show) s.classList.remove('hidden')
+  for(let c of CONTROLS.slice(0,3)) c.onclick=event=>click(c)
   window.onkeypress=event=>{if(event.key==' ') toggle()}
+  SAVE.onclick=save.store
 } 
 
 export function play(){

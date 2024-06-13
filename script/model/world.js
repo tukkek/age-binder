@@ -11,7 +11,7 @@ class Cell{
     this.point=new point.Point(x,y)
     this.elevation=0
     this.fertility=0
-    this.water=false//TODO overview: show all types
+    this.water=false
     this.x=x
     this.y=y
     let longitude=y/world.height

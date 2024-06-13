@@ -5,6 +5,7 @@ import * as names from '../view/names.js'
 import * as controls from '../view/controls.js'
 import * as worldm from '../model/world.js'
 import * as debug from './debug.js'
+import * as save from './save.js'
 import * as rpg from './rpg.js'
 
 export var pulse=new Array(2).fill(new Date().getTime())
@@ -34,11 +35,16 @@ function tick(){
 }
 
 export async function setup(){
-  await names.setup()
-  let n=await names.get()
-  rpg.seed(n.toLowerCase())
-  let size=[window.innerWidth,window.innerHeight]
-  world=new worldm.World(n,size[0],size[1])
+  if(debug.saved){
+    world=await save.restore()
+    rpg.seed(world.name.toLowerCase())
+  }else{
+    await names.setup()
+    let n=await names.get()
+    rpg.seed(n.toLowerCase())
+    let size=[window.innerWidth,window.innerHeight]
+    world=new worldm.World(n,size[0],size[1])
+  }
   map.setup()
   label.setup()
   controls.setup()
