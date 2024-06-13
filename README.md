@@ -15,4 +15,4 @@ Create your own worlds here: https://tukkek.github.io/age-binder/!
 
 ## Performance
 
-For the convenience of being hosted in a browser, Age Binder doesn't have the same ease of access to performance techniques readily available to other programs. As such, it's not as fast as it could be in an ideal scenario. It's performance is adequate for the vast majority of scenarios but if you are running an ultra-high resolution setup and are experiencing very slow generation, reducing the size of your browser window before opening the application should help.
+For the convenience of being hosted in a browser, Age Binder doesn't have the same ease of access to performance techniques readily available to other programs. As such, it's not as fast as it could be in an ideal scenario. It's performance is serviceable for the vast majority of scenarios but if you are running an ultra-high resolution setup and are experiencing very slow generation, reducing the size of your browser window before opening the application should help.
