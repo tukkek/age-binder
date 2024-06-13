@@ -46,6 +46,7 @@ export class World{
     this.year=1
     for(let p of point.iterate([0,this.width],[0,this.height]))
       this.grid[p.x][p.y]=new Cell(p.x,p.y,this)
+    this.area=Array.from(this.iterate())
   }
   
   *iterate(){
@@ -63,8 +64,6 @@ export class World{
     let director=rpg.chance(AGE)?brahma.instance:shiva.instance
     director.play()
   }
-  
-  get area(){return Array.from(this.iterate())}
 }
 
 class Waters{

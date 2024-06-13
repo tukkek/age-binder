@@ -23,6 +23,7 @@ class Hex{//im too dumb to do hexes... T_T
                           [y-hexsize,y+hexsize+1])
                             .filter(p=>p.validate([0,w.width],[0,w.height]))
                             .filter(p=>p.distance(this.point)<=hexsize)
+                            .map(p=>w.grid[p.x][p.y])
     this.icon=false
     this.x=x
     this.y=y
