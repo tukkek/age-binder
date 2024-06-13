@@ -1,4 +1,5 @@
-const CONTROLS=document.querySelectorAll('#controls>div')
+const VIEW=document.querySelector('#controls')
+const CONTROLS=VIEW.children
 const SELECTED='selected'
 const PAUSE=CONTROLS[1]
 const PLAY=CONTROLS[0]
@@ -20,6 +21,7 @@ function toggle(){
 }
 
 export function setup(){
+  VIEW.classList.remove('hidden')
   for(let c of CONTROLS) c.onclick=event=>click(c)
   window.onkeypress=event=>{if(event.key==' ') toggle()}
 } 

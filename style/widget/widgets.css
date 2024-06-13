@@ -7,4 +7,5 @@
   grid-auto-flow:column;
   justify-content:center;
   grid-gap:1em;
+  pointer-events:none;
 }
