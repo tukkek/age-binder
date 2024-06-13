@@ -7,6 +7,7 @@
 <link rel='stylesheet' href='style/label.css'>
 <link rel='stylesheet' href='style/names.css'>
 <link rel='stylesheet' href='style/map.css'>
+<link rel='stylesheet' href='style/summary.css'>
 
 <div id='icons'>
   <template id='icon'><img class='icon'/></template>
@@ -24,6 +25,13 @@
     <template id='name'><div class='name'>Loading...</div></template>
     <div><input placeholder='Or type your custom name...'><button>Enter</button></div>
   </div>
+</div>
+
+<div id='summary' class='hidden'>
+  <div class='header'>Overview<div>
+  <template id='detail'><div class='detail'>
+    <span>Name</span>: <span>content</span>.
+  </div></template>
 </div>
 
 <script type='module'>
