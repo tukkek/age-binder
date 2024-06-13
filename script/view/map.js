@@ -43,7 +43,6 @@ class Hex{//im too dumb to do hexes... T_T
   }
   
   attach(icon,gallery){
-    if(this.icon) this.icon.remove()
     this.icon=ICON.cloneNode(true)
     this.icon.src=gallery.prefix+icon
     let s=this.icon.style
@@ -83,24 +82,28 @@ function overlay(cell){
   let r=cell.resource
   if(!r) return
   let hex=enter(cell.x,cell.y)
-  if(hex) hex.attach(r.image,image.resources)
+  if(hex&&!hex.icon) hex.attach(r.image,image.resources)
 }
 
 export function draw(){
   let w=engine.world
-  for(let cell of w.iterate()){
-    let color=GROUND
-    let x=cell.x
-    let y=cell.y
-    if(cell.sea) color=SEA
-    else if(cell.ice&&((x+y)%3!=0)) color=ICE
-    else if(cell.water) color=WATER
-    else if(cell.mountain) color=MOUNTAIN
-    else if(cell.forest) color=FOREST
-    else if(cell.desert) color=DESERT
-    paint(x,y,color)
-    overlay(cell)
+  for(let h of hexes) if(h.icon){
+    h.icon.remove()
+    h.icon=false
   }
+  for(let x=0;x<w.width;x++)
+    for(let y=0;y<w.height;y++){
+      let cell=w.grid[x][y]
+      let color=GROUND
+      if(cell.sea) color=SEA
+      else if(cell.ice&&((x+y)%3!=0)) color=ICE
+      else if(cell.water) color=WATER
+      else if(cell.mountain) color=MOUNTAIN
+      else if(cell.forest) color=FOREST
+      else if(cell.desert) color=DESERT
+      paint(x,y,color)
+      overlay(cell)
+    }
   VIEW.putImageData(data,0,0)
   for(let h of hexes) h.draw()
 }
