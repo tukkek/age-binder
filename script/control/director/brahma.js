@@ -12,6 +12,8 @@ const TREMORS=[0,1,2].map(t=>t/100)
 const AGES=50
 const OASIS=1_000*AGES//earth ratio
 const ENRICH=map.hexcount/(10/2)/AGES
+const CLOUDS=20
+const RAIN=3/(CLOUDS*CLOUDS)
   
 class Brahma extends director.Director{
   constructor(){
@@ -24,12 +26,13 @@ class Brahma extends director.Director{
     if(amount==0) return
     let w=this.world
     let p=pointp
-    let x=[Math.max(0,p.x-100),Math.min(p.x+100+1,w.width)]
-    let y=[Math.max(0,p.y-100),Math.min(p.y+100+1,w.height)]
-    for(let cell of point.iterate(x,y)){
-      cell=w.grid[cell.x][cell.y]
-      cell.elevation+=amount/(p.distance(cell.point)/10+1)
-    }
+    let tox=Math.min(p.x+100+1,w.width)
+    let toy=Math.min(p.y+100+1,w.height)
+    for(let x=Math.max(0,p.x-100);x<tox;x++)
+      for(let y=Math.max(0,p.y-100);y<toy;y++){
+        let cell=w.grid[x][y]
+        cell.elevation+=amount/(p.distance(cell.point)/10+1)
+      }
   }
   
   rise(){
@@ -72,9 +75,9 @@ class Brahma extends director.Director{
       let r=rivers[i]
       if(r.sea) break
       let neighbors=r.point.expand()
-        .filter(p=>p.validate([0,width],[0,height]))
-        .map(p=>g[p.x][p.y])
-        .filter(cell=>cell.water!=river)
+                      .filter(p=>p.validate([0,width],[0,height]))
+                      .map(p=>g[p.x][p.y])
+                      .filter(cell=>cell.water!=river)
       if(neighbors.length==0) break
       r.water=world.waters.river
       rivers[i]=rpg.shuffle(neighbors)
@@ -82,38 +85,39 @@ class Brahma extends director.Director{
     }
   }
   
+  drop(cell){
+    if(cell.sea) return 5
+    if(cell.water) return cell.water==world.waters.shore?5:10
+    if(cell.forest) return cell.fertility*(1-.1)
+    return -1
+  }
+  
   rain(){
-    let shore=world.waters.shore
-    let CLOUDS=20//TODO
-    let RAIN=3/(CLOUDS*CLOUDS)
     let w=this.world
     let width=w.width
     let height=w.height
     for(let x=0;x<width;x++) for(let y=0;y<height;y++){
       let cell=w.grid[x][y]
-      if(!cell.land) continue
-      if(cell.desert&&rpg.chance(OASIS)){
+      cell.raindrop=this.drop(cell)
+    }
+    for(let x=0;x<width;x++) for(let y=0;y<height;y++){
+      let cell=w.grid[x][y]
+      if(cell.desert&&rpg.chance(OASIS))
         cell.water=world.waters.oasis
-        continue
-      } 
-      let f=0
+      if(!cell.land) continue
       let tox=Math.min(x+CLOUDS,width)
       let toy=Math.min(y+CLOUDS,height)
+      let wet=0
       for(let x2=Math.max(0,x-CLOUDS);x2<tox;x2++)
         for(let y2=Math.max(0,y-CLOUDS);y2<toy;y2++){
           let cell2=w.grid[x2][y2]
-          if(cell2==cell) continue
-          let rain=0
-          if(cell2.sea||cell2.water==shore) rain=5
-          else if(cell2.water) rain=10
-          else if(cell2.forest) rain=cell2.fertility*(1-.1)
-          else continue
-          f+=RAIN*rain/(cell.point.distance(cell2.point))
+          let d=cell2.point.distance(cell.point)
+          if(d>0) wet+=RAIN*cell2.raindrop/d
         }
-      f*=1+cell.weather/3
-      f=(2*f+.5)/3
-      if(f>1) f=1
-      cell.fertility=f
+      wet*=1+cell.weather/3
+      wet=(2*wet+.5)/3
+      if(wet>1) wet=1
+      cell.fertility=wet
     }
   }
   

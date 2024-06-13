@@ -10,6 +10,7 @@
 }
 #controls>div{
   cursor:pointer;
+  pointer-events:initial;
 }
 #controls .selected{
   color:red;
