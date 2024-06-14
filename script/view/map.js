@@ -6,7 +6,7 @@ import * as point from '../model/point.js'
 const CANVAS=document.querySelector('canvas#map')
 const VIEW=CANVAS.getContext('2d')
 const SEA=[0,0,255]
-const GROUND=[64,192,64]
+const GROUND=[96,192,64]
 const MOUNTAIN=[128,128,128]
 const WATER=[0,128,255]
 const FOREST=[0,128,0]
