@@ -22,7 +22,7 @@ function update(){
   lastupdate=[w.age,w.year]
   label.update()
   if(debug.profile&&!(a==1&&y==1)) return
-  if(debug.on&&a<1) return
+  // if(debug.on&&a<1) return
   map.draw()
 }
 
