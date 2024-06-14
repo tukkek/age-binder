@@ -97,11 +97,10 @@ export function draw(){
       let cell=w.grid[x][y]
       let color=GROUND
       if(cell.sea) color=SEA
-      else if(cell.ice&&((x+y)%3!=0)) color=ICE
       else if(cell.water) color=WATER
       else if(cell.mountain) color=MOUNTAIN
       else if(cell.forest) color=FOREST
-      else if(cell.desert) color=DESERT
+      else if(cell.desert) color=cell.ice?ICE:DESERT
       paint(x,y,color)
       overlay(cell)
     }
@@ -110,6 +109,7 @@ export function draw(){
 }
 
 export function setup(){
+  summary.setup()
   let world=engine.world
   let w=world.width
   let h=world.height

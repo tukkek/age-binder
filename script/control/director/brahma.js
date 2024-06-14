@@ -8,7 +8,6 @@ import * as map from '../../view/map.js'
 const BASELINE=1000*700
 const AREA=window.innerWidth*window.innerHeight
 const SPIKES=AREA/2/BASELINE
-const TREMORS=[0,1,2].map(t=>t/100)
 const AGES=50
 const OASIS=1_000*AGES//earth ratio
 const ENRICH=map.hexcount/(10/2)/AGES
@@ -44,7 +43,7 @@ class Brahma extends director.Director{
     if(rpg.random(SPIKES-spikes)) spikes+=1
     for(let i=0;i<spikes;i++) 
       peaks.push(point.random([0,width],[0,height]))
-    for(let p of peaks) this.deform(p,rpg.pick(TREMORS))
+    for(let p of peaks) this.deform(p,rpg.roll(0,2)/100)
     let xborder=width/20
     let yborder=height/20
     for(let x=0;x<xborder;x++) for(let y=0;y<height;y++)
@@ -86,9 +85,10 @@ class Brahma extends director.Director{
   }
   
   drop(cell){
-    if(cell.sea) return 5
-    if(cell.water) return cell.water==world.waters.shore?5:10
-    return cell.fertility/10
+    if(cell.sea) return 1
+    if(cell.water) return cell.water==world.waters.shore?3:1
+    if(cell.desert&&cell.ice) return -1/2
+    return cell.fertility/2
   }
   
   rain(){
@@ -113,9 +113,9 @@ class Brahma extends director.Director{
           let d=cell2.point.distance(cell.point)
           if(d>0) wet+=RAIN*cell2.raindrop/d
         }
-      wet*=1+cell.weather/3
-      wet=(2*wet+.5)/3
+      wet*=1+cell.weather*3/2-.5
       if(wet>1) wet=1
+      else if(wet<0) wet=0
       cell.fertility=wet
     }
   }

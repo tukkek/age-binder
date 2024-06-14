@@ -47,7 +47,7 @@ function collect(all){
 }
 
 export function show(hex){
-  setup()
+  VIEW.classList.remove('hidden')
   if(showing==hex) return false
   showing=hex
   let a=hex.area
@@ -64,10 +64,7 @@ export function show(hex){
 }
 
 export function setup(){
-  if(showing) return
-  let classes=VIEW.classList
-  classes.remove('hidden')
-  VIEW.onmouseover=()=>classes.toggle('right')
+  VIEW.onmouseover=()=>VIEW.classList.toggle('right')
   for(let d of DETAILS.keys()){
     let view=DETAIL.cloneNode(true)
     let name=d[0].toUpperCase()+d.slice(1)
