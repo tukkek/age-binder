@@ -88,8 +88,7 @@ class Brahma extends director.Director{
   drop(cell){
     if(cell.sea) return 5
     if(cell.water) return cell.water==world.waters.shore?5:10
-    if(cell.forest) return cell.fertility*(1-.1)
-    return -1
+    return cell.fertility/10
   }
   
   rain(){

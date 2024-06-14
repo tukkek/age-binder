@@ -116,9 +116,9 @@ export function setup(){
   CANVAS.setAttribute('width',w)
   CANVAS.setAttribute('height',h)
   let step=hexsize*2-5
-  for(let y=0;y<h+step;y+=step) for(let x=0;x<w;x+=hexsize*2){
-    let other=y/(step)%2
-    hexes.push(new Hex(x-(other?hexsize:0),y))
+  for(let y=0;y+step<h;y+=step) for(let x=0;x<w+step;x+=hexsize*2){
+    let align=y/(step)%2?hexsize:0
+    hexes.push(new Hex(x-align,y))
   }
   document.body.onmousemove=follow
   data=VIEW.getImageData(0,0,w,h)
