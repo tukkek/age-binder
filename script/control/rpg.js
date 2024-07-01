@@ -4,7 +4,9 @@ export function roll(min,max){return Math.floor(rng()*(max-min+1))+min}
 
 export function pick(array){return array[roll(0,array.length-1)]}
 
-export function high(min,max){return Math.max(roll(min,max),roll(min,max))}
+export function high(min,max,m=Math.max){return m(roll(min,max),roll(min,max))}
+
+export function low(min,max){return high(min,max,Math.min)}
 
 export function chance(n){return roll(1,n)==n}
 
