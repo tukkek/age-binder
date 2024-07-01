@@ -3,15 +3,27 @@ import * as rpg from '../control/rpg.js'
 const COUNTRIES=['bangladesh','brazil','china',
                   'india','indonesia','mexico',
                   'nigeria','pakistan','russia',
-                  'us']
-const NAMES=new Map()//country:generator
+                  'us','japan','germany','norway',
+                  'iceland','finland','france',
+                  'italy','greece']
+const FANTASY=new Map([
+  ['human',['us','france']],
+  ['lacerta',['japan','indonesia']],//lizard-folk
+  ['dwarf',['germany','norway']],
+  ['elf',['iceland','finland']],
+  ['halfling',['brazil','mexico']],
+  ['tiefling',['pakistan','nigeria']],
+  ['aasimar',['italy','greece']],
+  ['orc',['pakistan','nigeria','germany','norway']],
+])
 
-class Country{
-  constructor(names){
-    names.male=this.split(names.male)
-    this.names=names
-    names.female=this.split(names.female)
-    names.family=this.split(names.family)
+class Language{
+  constructor(names=false){
+    this.names=new Map([['male',[]],['female',[]],['family',[]]])
+    if(!names) return
+    this.names.get('family').push(...this.split(names.family))
+    this.names.get('female').push(...this.split(names.female))
+    this.names.get('male').push(...this.split(names.male))
   }
   
   split(names){return names.map(n=>n.toLowerCase().split('.'))}
@@ -19,6 +31,7 @@ class Country{
   roll(names){return names[rpg.low(0,names.length-1)]}
   
   generate(names){
+    names=this.names.get(names)
     let n=this.roll(names)
     n[0]=this.roll(names)[0]
     let l=n.length
@@ -43,21 +56,32 @@ class Country{
     return n[0].toUpperCase()+n.slice(1)
   }
   
-  get male(){return this.generate(this.names.male)}
+  get male(){return this.generate('male')}
   
-  get female(){return this.generate(this.names.female)}
+  get female(){return this.generate('female')}
   
-  get family(){return this.generate(this.names.family)}
+  get family(){return this.generate('family')}
+  
+  merge(language){
+    for(let key of ['male','female','family'])
+      this.names.get(key).push(...language.names.get(key))
+  }
 }
+
+export var countries=new Map()//country:language
+export var fantasy=new Map()//country:language
 
 export async function setup(){
   for(let c of COUNTRIES){
     let names=await fetch(`name/${c}.json`)
     names=await names.json()
-    NAMES.set(c,new Country(names))
-    
+    countries.set(c,new Language(names))
+  }
+  for(let f of FANTASY.keys()){
+    let l=new Language()
+    fantasy.set(f,l)
+    for(let country of FANTASY.get(f))
+      l.merge(countries.get(country))
   }
   return Promise.resolve()
 }
-
-export function get(country){return NAMES.get(c)}//TODO
