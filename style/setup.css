@@ -1,0 +1,45 @@
+div:has(>#setup){
+  width:100%;
+  height:100%;
+  display:grid;
+  align-items:center;
+  justify-items:center;
+}
+#setup{
+  display:grid;
+  background-color:lightgray;
+  border-radius:1em;
+  padding:1em;
+  grid-gap:1em;
+  border:.2em outset brown;
+  min-width:50%;
+  justify-items:center;
+}
+#setup .name{
+  display:grid;
+  grid-auto-flow:column;
+  grid-template-columns:auto min-content;
+  width:100%;
+}
+#setup .generate{
+  width:100%;
+  font-weight:bold;
+}
+#setup .lists{
+  display:grid;
+  grid-auto-flow:column;
+  width:100%;
+  grid-gap:1em;
+  margin:0 5em;
+}
+#setup .lists .list{
+  display:grid;
+  font-size:small;
+}
+#setup .lists .list label{
+  text-align:center;
+}
+#setup .lists .list .header{
+  font-weight:bold;
+  text-decoration:underline;
+}

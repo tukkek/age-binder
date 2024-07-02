@@ -1,7 +1,7 @@
 //TODO import * as character from '../model/character.js'
 import * as map from '../view/map.js'
 import * as label from '../view/label.js'
-import * as names from '../view/names.js'
+import * as setupm from '../view/setup.js'
 import * as controls from '../view/controls.js'
 import * as worldm from '../model/world.js'
 import * as name from '../model/name.js'
@@ -43,8 +43,8 @@ export async function setup(){
     world=await save.restore()
     rpg.seed(world.name.toLowerCase())
   }else{
-    await names.setup()
-    let n=await names.get()
+    await setupm.setup()
+    let n=await setupm.get()
     rpg.seed(n.toLowerCase())
     let size=[window.innerWidth,window.innerHeight]
     world=new worldm.World(n,size[0],size[1])

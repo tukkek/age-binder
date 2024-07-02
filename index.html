@@ -6,7 +6,7 @@
 <title>Age Binder</title>
 
 <link rel='stylesheet' href='style/engine.css'>
-<link rel='stylesheet' href='style/names.css'>
+<link rel='stylesheet' href='style/setup.css'>
 <link rel='stylesheet' href='style/map.css'>
 <link rel='stylesheet' href='style/summary.css'>
 <link rel='stylesheet' href='style/widget/label.css'>
@@ -32,10 +32,19 @@
 <canvas id='map' class='hidden'></canvas>
 
 <div class='hidden'>
-  <div id='names'>
-    <div>Choose a name for your new world:</div>
-    <template id='name'><div class='name'>Loading...</div></template>
-    <div><input placeholder='Or type your custom name...'><button>Enter</button></div>
+  <div id='setup'>
+    <div class='name'><input placeholder='Type a name for your world.'><button>Randomize</button></div>
+    <div class='lists'>
+      <template id='list'>
+        <div class='list'>
+          <div class='header'>Header</div>
+          <select><option>Presets...</option></select>
+          <textarea rows='10'></textarea>
+          <label>Randomize? <input type='checkbox' checked/></label>
+        </div>
+      </template>
+    </div>
+    <button class='generate'>Generate world!</button>
   </div>
 </div>
 

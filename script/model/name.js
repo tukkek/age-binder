@@ -1,19 +1,20 @@
 import * as rpg from '../control/rpg.js'
+import * as preset from '../control/preset.js'
 
-const COUNTRIES=['bangladesh','brazil','china','finland',
-                  'france','germany','greece','iceland',
-                  'india','indonesia','italy','japan',
-                  'mexico','nigeria','norway','pakistan',
-                  'russia','us']
+const COUNTRIES=['Bangladesh','Brazil','China','Finland',
+                  'France','Germany','Greece','Iceland',
+                  'India','Indonesia','Italy','Japan',
+                  'Mexico','Nigeria','Norway',
+                  'Pakistan','Russia','US']
 const FANTASY=new Map([
-  ['human',['us','france']],
-  ['lacerta',['japan','indonesia']],//lizard-folk
-  ['dwarf',['germany','norway']],
-  ['elf',['iceland','finland']],
-  ['halfling',['brazil','mexico']],
-  ['tiefling',['pakistan','nigeria']],
-  ['aasimar',['italy','greece']],
-  ['orc',['pakistan','nigeria','germany','norway']],
+  ['Aasimar',['Italy','Greece']],
+  ['Dwarf',['Germany','Norway']],
+  ['Elf',['Iceland','Finland']],
+  ['Halfling',['Brazil','Mexico']],
+  ['Human',['US','France']],
+  ['Lacerta',['Japan','Indonesia']],//lizard-folk
+  ['Orc',['Pakistan','Nigeria','Germany','Norway']],
+  ['Tiefling',['Pakistan','Nigeria']],
 ])
 
 class Language{
@@ -67,12 +68,39 @@ class Language{
   }
 }
 
+class Scenario{
+  constructor(){
+    this.adjectives=false
+    this.nouns=false
+  }
+
+  async load(file){
+    let j=await fetch(`./corpora/data/words/${file}.json`)
+    j=await j.json()
+    return j[file]
+  }
+
+  async setup(){
+    this.adjectives=await this.load('adjs')
+    this.nouns=await this.load('nouns')
+  }
+
+  get(){
+    let name=`${rpg.pick(this.adjectives)} ${rpg.pick(this.nouns)}`
+    return name[0].toUpperCase()+name.slice(1)
+  }
+}
+
 export var countries=new Map()//country:language
 export var fantasy=new Map()//country:language
+export var presets=[new preset.Preset('Countries',COUNTRIES),
+                    new preset.Preset('Fantasy',Array.from(FANTASY.keys()))]
+export var scenario=new Scenario()
 
 export async function setup(){
+  await scenario.setup()
   for(let c of COUNTRIES){
-    let names=await fetch(`name/${c}.json`)
+    let names=await fetch(`name/${c.toLowerCase()}.json`)
     names=await names.json()
     countries.set(c,new Language(names))
   }
