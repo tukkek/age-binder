@@ -86,15 +86,15 @@ function overlay(cell){
   if(hex&&!hex.icon) hex.attach(r.image,image.resources)
 }
 
-export function draw(){
+export function draw(full=true){
   let w=engine.world
   for(let h of hexes) if(h.icon){
     h.icon.remove()
     h.icon=false
   }
-  for(let x=0;x<w.width;x++)
-    for(let y=0;y<w.height;y++){
-      let cell=w.grid[x][y]
+  for(let x=0;x<w.width;x++) for(let y=0;y<w.height;y++){
+    let cell=w.grid[x][y]
+    if(full){
       let color=GROUND
       if(cell.sea) color=SEA
       else if(cell.water) color=WATER
@@ -102,8 +102,9 @@ export function draw(){
       else if(cell.forest) color=FOREST
       else if(cell.desert) color=cell.ice?ICE:DESERT
       paint(x,y,color)
-      overlay(cell)
     }
+    overlay(cell)
+  }
   VIEW.putImageData(data,0,0)
   for(let h of hexes) h.draw()
 }

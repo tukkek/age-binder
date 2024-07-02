@@ -60,12 +60,12 @@ export class World{
   }
   
   live(){
-    if(this.age<1){
+    if(this.age<1||rpg.chance(AGE)){
       brahma.instance.play()
-      return
+      return true
     }
-    let director=rpg.chance(AGE)?brahma.instance:shiva.instance
-    director.play()
+    shiva.instance.play()
+    return false
   }
 }
 

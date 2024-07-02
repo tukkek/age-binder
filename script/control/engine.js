@@ -14,6 +14,7 @@ export var pulse=new Array(2).fill(new Date().getTime())
 export var world=false
 
 var lastupdate=[-9000,-9000]
+var redraw=true
 
 function update(){
   if(!controls.play()) return
@@ -24,13 +25,14 @@ function update(){
   lastupdate=[w.age,w.year]
   label.update()
   if(debug.profile&&!(a==1&&y==1)) return
-  // if(debug.on&&a<1) return
-  map.draw()
+  if(debug.on&&a<1) return
+  map.draw(redraw)
+  redraw=false
 }
 
 function tick(){
   if(!controls.play()) return
-  world.live()
+  if(world.live()) redraw=true
   if(!debug.on) return
   pulse=[pulse[1],new Date().getTime()]
   if(world.age>-50) debug.tick()
