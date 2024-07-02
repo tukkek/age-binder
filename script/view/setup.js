@@ -3,26 +3,26 @@ import * as rpg from '../control/rpg.js'
 import * as shiva from '../control/director/shiva.js'
 import * as color from '../model/color.js'
 import * as worship from '../model/worship.js'
-import * as name from '../model/name.js'
+import * as namem from '../model/name.js'
 
 const VIEW=document.querySelector('#setup')
-const TEXT=VIEW.querySelector('input')
+const SCENARIO=VIEW.querySelector('input')
 const LISTS=VIEW.querySelector('.lists')
 const LIST=LISTS.querySelector('template#list').content.children[0]
 
 var callback=false
 
-function show(hide=false){VIEW.parentNode.classList.toggle('hidden',hide)}
+function show(show=true){VIEW.parentNode.classList.toggle('hidden',!show)}
 
-function promise(callbackp){
-  callback=callbackp
-  if(debug.on) callbackp(name.get())
+export async function open(){
+  if(!debug.on) return new Promise((callbackp)=>callback=callbackp)
+  generate()
+  return Promise.resolve()
 }
 
-export async function get(){return new Promise(promise)}
+export function name(){return SCENARIO.value||randomize()}
 
 function generate(){
-  if(!TEXT.value) randomize()
   show(false)
   let lists=Array.from(LISTS.querySelectorAll('.list'))
   let values=lists.map(l=>l.querySelector('textarea').value.split('\n'))
@@ -31,11 +31,12 @@ function generate(){
       rpg.shuffle(values[i])
   let nvalues=Math.min(...values.map(l=>l.length))
   let p=shiva.Realm.pool
-  for(let i=0;i<nvalues;i++) p.push(new shiva.Realm(...values.map(values=>values[i])))
-  callback(TEXT.value)
+  for(let i=0;i<nvalues;i++) 
+    p.push(new shiva.Realm(...values.map(values=>values[i])))
+  if(callback) callback()
 }
 
-function randomize(){TEXT.value=name.scenario.get()}
+function randomize(){return namem.scenario.get()}
 
 function populate(list,preset=false){
   let s=list.querySelector('select')
@@ -64,14 +65,14 @@ function list(header,presets=[]){
 }
 
 export async function setup(){
-  await name.setup()
-  if(debug.on) return
+  await namem.setup()
   list('Colors',color.presets)
-  list('Peoples',name.presets)
+  list('Peoples',namem.presets)
   list('Cultures',worship.presets)
+  if(debug.on) return
   show()
-  TEXT.onkeypress=event=>{if(event.key=='Enter') generate()}
-  TEXT.focus()
-  VIEW.querySelector('.name button').onclick=randomize
+  SCENARIO.onkeypress=event=>{if(event.key=='Enter') generate()}
+  SCENARIO.focus()
+  VIEW.querySelector('.name button').onclick=()=>SCENARIO.value=randomize()
   VIEW.querySelector('.generate').onclick=generate
 }

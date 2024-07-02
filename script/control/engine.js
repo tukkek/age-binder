@@ -39,12 +39,13 @@ function tick(){
 export async function setup(){
   await name.setup()
   worship.setup()
+  await setupm.setup()
+  await setupm.open()
   if(debug.saved){
     world=await save.restore()
     rpg.seed(world.name.toLowerCase())
   }else{
-    await setupm.setup()
-    let n=await setupm.get()
+    let n=setupm.name()
     rpg.seed(n.toLowerCase())
     let size=[window.innerWidth,window.innerHeight]
     world=new worldm.World(n,size[0],size[1])
