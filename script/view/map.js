@@ -2,6 +2,7 @@ import * as summary from './summary.js'
 import * as image from './image.js'
 import * as engine from '../control/engine.js'
 import * as point from '../model/point.js'
+import * as color from '../model/color.js'
 
 const CANVAS=document.querySelector('canvas#map')
 const VIEW=CANVAS.getContext('2d')
@@ -27,11 +28,24 @@ class Hex{//im too dumb to do hexes... T_T
     this.icon=false
     this.x=x
     this.y=y
+    this.owner=false
+  }
+  
+  own(){
+    let owners=Map.groupBy(this.area.filter(a=>a.owner),(a)=>a.owner)
+    if(owners.size==0){
+      this.owner=false
+      return false
+    }
+    let realms=Array.from(owners.keys())
+    this.owner=realms.reduce((a,b)=>owners.get(a).length>owners.get(b).length?a:b)
+    return this.owner
   }
   
   draw(){
     VIEW.lineWidth=1
-    VIEW.strokeStyle='black'
+    let o=this.own()
+    VIEW.strokeStyle=o?color.gems.get(o.color):'black'
     VIEW.beginPath()
     VIEW.arc(this.x,this.y,hexsize,0,2*Math.PI,false)
     VIEW.setLineDash([1,2])

@@ -24,6 +24,7 @@ class Cell{
     this.food=0
     this.arms=0
     this.resource=false
+    this.owner=false
   }
   
   get sea(){return this.elevation<=.2}

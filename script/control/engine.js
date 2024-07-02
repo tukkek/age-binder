@@ -59,6 +59,6 @@ export async function setup(){
     debug.test.run()
     return
   }
-  setInterval(tick,100)
+  setInterval(tick,debug.on?10:100)
   setInterval(update,1000)
 }

@@ -2,12 +2,13 @@ import * as engine from '../control/engine.js'
 
 const VIEW=document.querySelector('#summary')
 const DETAIL=VIEW.querySelector('template#detail').content.children[0]
+const OWNER='owner'
 const RESOURCES='resources'
 const ELEVATION='elevation'
 const BIOME='biome'
 const WATERS='waters'
 const WEATHER='weather'
-const DETAILS=new Map([BIOME,ELEVATION,RESOURCES,WATERS,WEATHER].map(detail=>[detail,false]))
+const DETAILS=new Map([OWNER,BIOME,ELEVATION,RESOURCES,WATERS,WEATHER].map(detail=>[detail,false]))
 const RANGE=['very low','low','average','high','very high']
 const WEATHERRANGE=['very cold','cold','temperate','hot','very hot']
 
@@ -47,6 +48,7 @@ function collect(all){
 }
 
 export function show(hex){
+  if(!hex) return
   VIEW.classList.remove('hidden')
   if(showing==hex) return false
   showing=hex
@@ -59,6 +61,8 @@ export function show(hex){
   descriptions.set(RESOURCES,collect(resources))
   let waters=collect(a.map(cell=>cell.sea?'open sea':cell.water))
   descriptions.set(WATERS,waters)
+  let o=hex.owner
+  descriptions.set(OWNER,o?o.name:'none')
   for(let d of descriptions.keys())
     DETAILS.get(d).textContent=descriptions.get(d)
 }
