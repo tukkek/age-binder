@@ -5,6 +5,7 @@ import * as names from '../view/names.js'
 import * as controls from '../view/controls.js'
 import * as worldm from '../model/world.js'
 import * as name from '../model/name.js'
+import * as worship from '../model/worship.js'
 import * as debug from './debug.js'
 import * as save from './save.js'
 import * as rpg from './rpg.js'
@@ -36,11 +37,12 @@ function tick(){
 }
 
 export async function setup(){
+  await name.setup()
+  worship.setup()
   if(debug.saved){
     world=await save.restore()
     rpg.seed(world.name.toLowerCase())
   }else{
-    name.setup()
     await names.setup()
     let n=await names.get()
     rpg.seed(n.toLowerCase())

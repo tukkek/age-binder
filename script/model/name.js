@@ -1,11 +1,10 @@
 import * as rpg from '../control/rpg.js'
 
-const COUNTRIES=['bangladesh','brazil','china',
-                  'india','indonesia','mexico',
-                  'nigeria','pakistan','russia',
-                  'us','japan','germany','norway',
-                  'iceland','finland','france',
-                  'italy','greece']
+const COUNTRIES=['bangladesh','brazil','china','finland',
+                  'france','germany','greece','iceland',
+                  'india','indonesia','italy','japan',
+                  'mexico','nigeria','norway','pakistan',
+                  'russia','us']
 const FANTASY=new Map([
   ['human',['us','france']],
   ['lacerta',['japan','indonesia']],//lizard-folk
