@@ -37,10 +37,6 @@ export function *iterate(xrange,yrange){
 }
 
 export function random(xrange,yrange){
-  if(!xrange){
-    xrange=[0,engine.world.width-1]
-    yrange=[0,engine.world.height-1]
-  }
   let x=rpg.roll(xrange[0],xrange[1])
   let y=rpg.roll(yrange[0],yrange[1])
   return new Point(x,y)

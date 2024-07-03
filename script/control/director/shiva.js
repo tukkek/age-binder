@@ -58,8 +58,9 @@ class Shiva extends director.Director{
     if(!rpg.chance(100)) return
     let realm=pool.shift()
     let p=false
-    while(!p||!realm.conquer(this.world.grid[p.x][p.y]))
-      p=point.random()
+    let w=this.world
+    while(!p||!realm.conquer(w.grid[p.x][p.y]))
+      p=point.random([0,w.width-1],[0,w.height-1])
     this.realms.push(realm)
     this.log(`The ${realm.name} is born!`)
   }
