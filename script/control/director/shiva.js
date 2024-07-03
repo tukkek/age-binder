@@ -60,12 +60,9 @@ export class Realm{
     }
     if(!this.expand(cell,true)) return false
     cell.culture=this.culture
-    let p=cell.point
-    let hex=map.enter(p.x,p.y)
-    if(rpg.chance(Math.floor(hex.area.length/10))){
-      let province=hex.name
-      instance.log(`The ${this.name} are converting ${province}`)
-    }
+    let hex=this.enter(cell)
+    if(rpg.chance(Math.floor(hex.area.length/10)))
+      instance.log(`The ${this.name} are converting ${hex.name}`)
     return true
   }
   
@@ -82,33 +79,46 @@ export class Realm{
     if(!this.expand(cell,true)) return false
     cell.culture=this.culture
     cell.people=this.people
-    let p=cell.point
-    let hex=map.enter(p.x,p.y)
-    if(rpg.chance(Math.floor(hex.area.length/10))){
-      let province=hex.name
-      instance.log(`The ${this.name} are invading in ${province}`)
-    }
+    cell.trade/=2
+    let hex=this.enter(cell)
+    if(rpg.chance(Math.floor(hex.area.length/10)))
+      instance.log(`The ${this.name} are invading in ${hex.name}`)
     return true
+  }
+  
+  enter(cell){
+    let p=cell.point
+    return map.enter(p.x,p.y)
   }
   
   get dead(){return this.area.length==0}
   
   sail(cell){
+    // if(cell.trade<200) return
     let w=instance.world
-    let f=Math.floor(cell.food)
+    let h=this.enter(cell)
+    if(!h) return
+    let a=1//map.hexsize*2
+    let f=Math.floor(cell.trade/a)
+    if(f<=0) return
     let range=[[Math.max(0,cell.x-f),Math.min(cell.x+f,w.width-1)],
                 [Math.max(0,cell.y-f),Math.min(cell.y+f,w.height-1)]]
-    let p=cell.point
-    let to=Array.from(new Array(2),()=>point.random(range[0],range[1]))
-            .reduce((a,b)=>a.distance(p)<b.distance(p)?a:b)
-    if(this.expand(w.grid[to.x][to.y])) cell.food=0
+    let to=point.random(range[0],range[1])
+    to=w.grid[to.x][to.y]
+    if(this.expand(to))
+      cell.trade-=cell.point.distance(to.point)*a
+    // if(to.sea||to.holding) return
+    // let o=to.owner
+    // if(o&&o!=this) return
+    if(to.owner==this&&rpg.chance(h.area.length*100))
+      console.log(`${this.name} founds an outpost in the ${h.name}`)
   }
   
   turn(){
     if(this.area.length==0) return
     let w=instance.world
     let valid=[[0,w.width],[0,w.height]]
-    let fat=this.area[0]
+    // let rich=this.area[0]
     for(let a of this.area){
       a.produce()
       let neighbors=a.point.expand()
@@ -118,11 +128,10 @@ export class Realm{
         if(a.food>=1&&a.food>n.food&&this.colonize(n)) a.food-=1
         if(a.worship>=1&&a.worship>n.worship&&this.convert(n)) a.worship-=1
         if(a.arms>=1&&a.arms>n.arms&&this.conquer(n)) a.arms-=1
-        
       }
-      if(a.food>fat.food) fat=a
+      // if(a.trade>rich.trade) rich=a
+      this.sail(a)
     }
-    this.sail(fat)
   }
   
   get technology(){return 1+this.science/500}
