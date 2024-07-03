@@ -30,7 +30,10 @@ class SavedWorld{
     this.world=world
   }
   
-  save(){return JSON.stringify(this.world)}
+  save(){
+    for(let a of this.world.area) a.owner=false
+    return JSON.stringify(this.world)
+  }
   
   transfer(world){
     let a=this.world
