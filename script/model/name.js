@@ -16,14 +16,17 @@ const FANTASY=new Map([
   ['Orc',['Pakistan','Nigeria','Germany','Norway']],
   ['Tiefling',['Pakistan','Nigeria']],
 ])
+const KEYS=['male','female','family','province']
 
 class Language{
-  constructor(names=false){
-    this.names=new Map([['male',[]],['female',[]],['family',[]]])
-    if(!names) return
-    this.names.get('family').push(...this.split(names.family))
-    this.names.get('female').push(...this.split(names.female))
-    this.names.get('male').push(...this.split(names.male))
+  constructor(namesp=false){
+    let names=new Map(KEYS.map(key=>[key,[]]))
+    this.names=names
+    if(!namesp) return
+    names.get('family').push(...this.split(namesp.family))
+    names.get('female').push(...this.split(namesp.female))
+    names.get('male').push(...this.split(namesp.male))
+    for(let k of KEYS.slice(0,-1)) names.get('province').push(...names.get(k))
   }
   
   split(names){return names.map(n=>n.toLowerCase().split('.'))}
@@ -62,9 +65,12 @@ class Language{
   
   get family(){return this.generate('family')}
   
+  get province(){return this.generate('province')}
+  
   merge(language){
-    for(let key of ['male','female','family'])
-      this.names.get(key).push(...language.names.get(key))
+    let names=language.names
+    for(let key of names.keys())
+      this.names.get(key).push(...names.get(key))
   }
 }
 
@@ -112,3 +118,5 @@ export async function setup(){
   }
   return Promise.resolve()
 }
+
+export function speak(people){return countries.get(people)||fantasy.get(people)}

@@ -3,6 +3,7 @@ import * as rpg from '../rpg.js'
 import * as color from '../../model/color.js'
 import * as point from '../../model/point.js'
 import * as biome from '../../model/biome.js'
+import * as name from '../../model/name.js'
 
 export class Realm{
   static pool=[]
@@ -13,6 +14,7 @@ export class Realm{
     this.people=people
     this.color=color
     this.area=[]
+    this.language=name.speak(people)
   }
   
   expand(cell,takeover=false){

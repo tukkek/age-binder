@@ -15,6 +15,7 @@ const DESERT=[192,192,0]
 const ICE=[256,256,256]
 const ICONS=document.querySelector('#icons')
 const ICON=ICONS.querySelector('template#icon').content.children[0]
+const UNNAMED='Wilderness'
 
 class Hex{//im too dumb to do hexes... T_T
   constructor(x,y){
@@ -29,6 +30,7 @@ class Hex{//im too dumb to do hexes... T_T
     this.x=x
     this.y=y
     this.owner=false
+    this.name=UNNAMED
   }
   
   own(){
@@ -38,8 +40,10 @@ class Hex{//im too dumb to do hexes... T_T
       return false
     }
     let realms=Array.from(owners.keys())
-    this.owner=realms.reduce((a,b)=>owners.get(a).length>owners.get(b).length?a:b)
-    return this.owner
+    let r=realms.reduce((a,b)=>owners.get(a).length>owners.get(b).length?a:b)
+    this.owner=r
+    if(this.name==UNNAMED) this.name=`${r.language.province} province`
+    return r
   }
   
   overlay(){

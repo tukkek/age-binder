@@ -5,6 +5,7 @@ const POLITICS=VIEW.querySelector('.geopolitics')
 const GEOGRAPHY=VIEW.querySelector('.geography')
 const RANGE=['very low','low',false,'high','very high']
 const WEATHERRANGE=['very cold','cold',false,'hot','very hot']
+const HEADER=VIEW.querySelector('.header')
 
 var showing=false
 
@@ -51,6 +52,7 @@ export function show(hex){
   VIEW.classList.remove('hidden')
   if(showing==hex) return false
   showing=hex
+  HEADER.textContent=hex.name
   let o=hex.owner
   let a=hex.area
   let politics=[o?o.name:'unclaimed',
