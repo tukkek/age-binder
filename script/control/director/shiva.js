@@ -50,9 +50,21 @@ export class Realm{
     return true
   }
   
+  sail(cell){
+    let w=instance.world
+    let f=Math.floor(cell.food)
+    let range=[[Math.max(0,cell.x-f),Math.min(cell.x+f,w.width-1)],
+                [Math.max(0,cell.y-f),Math.min(cell.y+f,w.height-1)]]
+    let p=cell.point
+    let to=Array.from(new Array(2),()=>point.random(range[0],range[1]))
+            .reduce((a,b)=>a.distance(p)<b.distance(p)?a:b)
+    if(this.expand(w.grid[to.x][to.y])) cell.food=0
+  }
+  
   turn(){
     let w=instance.world
     let valid=[[0,w.width],[0,w.height]]
+    let fat=this.area[0]
     for(let a of this.area){
       a.produce()
       let neighbors=a.point.expand()
@@ -60,7 +72,9 @@ export class Realm{
                       .map(p=>w.grid[p.x][p.y])
       if(a.food>=1&&this.colonize(neighbors.reduce((a,b)=>a.food<b.food?a:b)))
         a.food-=1
+      if(a.food>fat.food) fat=a
     }
+    this.sail(fat)
   }
 }
 
