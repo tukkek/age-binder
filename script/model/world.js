@@ -20,7 +20,6 @@ class Cell{
     this.ice=!(.2<=l&&l<.8)
     this.weather=Math.abs(1-(Math.abs(l-.5)/.5))//0=poles 1=tropic
     this.worship=0
-    this.science=0
     this.trade=0
     this.food=0
     this.arms=0
@@ -45,11 +44,12 @@ class Cell{
   produce(){
     if(this.resource) this.resource.use(this)
     if(this.ice||this.desert) return
-    let w=this.weather
-    if(this.forest||this.sea||this.water) this.food+=w
-    else if(this.mountain) this.arms+=1
-    else if(rpg.chance(2)) this.food+=w
-    else this.trade+=1
+    let production=this.owner.technology
+    let harvest=production*this.weather
+    if(this.forest||this.sea||this.water) this.food+=harvest
+    else if(this.mountain) this.arms+=production
+    else if(rpg.chance(2)) this.food+=harvest
+    else this.trade+=production
   }
   
   eat(){return FOOD.indexOf(this.biome)>=0}

@@ -16,6 +16,7 @@ export class Realm{
     this.color=color
     this.area=[]
     this.language=name.speak(people)
+    this.science=0
   }
   
   expand(cell,takeover=false){
@@ -117,11 +118,14 @@ export class Realm{
         if(a.food>=1&&a.food>n.food&&this.colonize(n)) a.food-=1
         if(a.worship>=1&&a.worship>n.worship&&this.convert(n)) a.worship-=1
         if(a.arms>=1&&a.arms>n.arms&&this.conquer(n)) a.arms-=1
+        
       }
       if(a.food>fat.food) fat=a
     }
     this.sail(fat)
   }
+  
+  get technology(){return 1+this.science/500}
 }
 
 class Shiva extends director.Director{

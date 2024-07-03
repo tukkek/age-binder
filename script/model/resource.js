@@ -94,7 +94,7 @@ class Technology extends Resource{
     super(name,image.resources.technology)
   }
   
-  use(cell){cell.science+=YIELD}
+  use(cell){cell.owner.science+=2}
 }
 
 var all=new Map([//0 is basic (implied)

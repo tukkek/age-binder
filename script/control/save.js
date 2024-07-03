@@ -16,7 +16,6 @@ class SavedCell{
     b.fertility=a.fertility
     b.water=a.water
     b.worship=a.worship
-    b.science=a.science
     b.trade=a.trade
     b.food=a.food
     b.arms=a.arms
@@ -38,8 +37,8 @@ class SavedWorld{
   transfer(world){
     let a=this.world
     let b=world
-    b.year=a.year
-    b.age=a.age
+    b.year=0
+    b.age=1
     for(let cell of a.grid.flatMap(row=>row)){
       let to=b.grid[cell.x][cell.y]
       new SavedCell(cell).transfer(to)

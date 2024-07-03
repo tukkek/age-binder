@@ -4,7 +4,8 @@ const VIEW=document.querySelector('#summary')
 const POLITICS=VIEW.querySelector('.geopolitics')
 const GEOGRAPHY=VIEW.querySelector('.geography')
 const RANGE=['very low','low',false,'high','very high']
-const WEATHERRANGE=['very cold','cold',false,'hot','very hot']
+const WEATHER=['very cold','cold',false,'hot','very hot']
+const TECHNOLOGY=[false,'barely advanced','advanced','very advanced','extremely advanced']
 const HEADER=VIEW.querySelector('.header')
 
 var showing=false
@@ -57,11 +58,12 @@ export function show(hex){
   let a=hex.area
   let politics=[o?o.name:'unclaimed',
                 extract(a.map(cell=>cell.culture).filter(c=>c)),
-                extract(a.map(cell=>cell.people).filter(p=>p)),]
+                extract(a.map(cell=>cell.people).filter(p=>p)),
+                describe((o.technology-1)/5,TECHNOLOGY),]
   politics.push(...a.map(cell=>cell.resource&&cell.resource.name).filter(r=>r))
   print(politics,POLITICS)
   let geography=[extract(a.map(cell=>cell.biome)),
-                  describe(scan(hex,(cell)=>cell.weather),WEATHERRANGE),
+                  describe(scan(hex,(cell)=>cell.weather),WEATHER),
                   describe(scan(hex,(cell)=>cell.elevation)),
                   collect(a.map(cell=>!cell.sea&&cell.water)),]
   print(geography,GEOGRAPHY)
