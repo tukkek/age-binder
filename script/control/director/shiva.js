@@ -17,11 +17,16 @@ export class Realm{
   
   expand(cell,takeover=false){
     if(cell.sea) return false
-    if(cell.owner){
+    let o=cell.owner
+    if(o){
       if(!takeover) return false
-      if(cell.owner==this) return false
-      let a=cell.owner.area
+      if(o==this) return false
+      let a=o.area
       a.splice(a.indexOf(cell),1)
+      if(o.dead){
+        let log=`The ${o.name} have been subjugated by the ${this.name}`
+        instance.log(log)
+      }
     }
     cell.owner=this
     this.area.push(cell)
@@ -42,16 +47,22 @@ export class Realm{
   convert(cell){}//TODO
   
   conquer(cell){
-    //TODO
+    if(cell.owner==this){
+      cell.arms+=1
+      return true
+    }
+    if(!cell.owner) return false
+    if(cell.arms>0){
+      cell.arms-=1
+      return false
+    }
     if(!this.expand(cell,true)) return false
+    cell.culture=this.culture
+    cell.people=this.people
     return true
   }
   
-  die(){
-    if(this.area.length>0) return false
-    instance.log(`The ${realm.name} has vanished`)
-    return true
-  }
+  get dead(){return this.area.length==0}
   
   sail(cell){
     let w=instance.world
@@ -65,6 +76,7 @@ export class Realm{
   }
   
   turn(){
+    if(this.area.length==0) return
     let w=instance.world
     let valid=[[0,w.width],[0,w.height]]
     let fat=this.area[0]
@@ -74,8 +86,8 @@ export class Realm{
                       .filter(p=>p.validate(valid[0],valid[1]))
                       .map(p=>w.grid[p.x][p.y])
       for(let n of rpg.shuffle(neighbors)){
-        if(a.food>=1&&a.food>n.food&&this.colonize(n))
-          a.food-=1
+        if(a.food>=1&&a.food>n.food&&this.colonize(n)) a.food-=1
+        if(a.arms>=1&&a.arms>n.arms&&this.conquer(n)) a.arms-=1
       }
       if(a.food>fat.food) fat=a
     }
@@ -107,7 +119,7 @@ class Shiva extends director.Director{
   play(){
     this.world.year+=1
     this.spawn()
-    this.realms=this.realms.filter(r=>!r.die())
+    this.realms=this.realms.filter(r=>!r.dead)
     for(let r of this.realms) r.turn()
   }
 }
