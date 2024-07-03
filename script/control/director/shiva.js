@@ -70,8 +70,10 @@ export class Realm{
       let neighbors=a.point.expand()
                       .filter(p=>p.validate(valid[0],valid[1]))
                       .map(p=>w.grid[p.x][p.y])
-      if(a.food>=1&&this.colonize(neighbors.reduce((a,b)=>a.food<b.food?a:b)))
-        a.food-=1
+      for(let n of rpg.shuffle(neighbors)){
+        if(a.food>=1&&a.food>n.food&&this.colonize(n))
+          a.food-=1
+      }
       if(a.food>fat.food) fat=a
     }
     this.sail(fat)

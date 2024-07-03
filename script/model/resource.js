@@ -3,7 +3,7 @@ import * as engine from '../control/engine.js'
 import * as biome from './biome.js'
 import * as image from '../view/image.js'
 
-const YIELD=10
+const YIELD=9
 
 class Resource{
   constructor(name,image=false){

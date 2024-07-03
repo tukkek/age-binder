@@ -41,6 +41,7 @@ class Cell{
   get biome(){return biome.get(this)}
   
   produce(){
+    if(this.resource) this.resource.use(this)
     if(this.ice||this.desert) return
     let w=this.weather
     if(this.forest||this.sea||this.water) this.food+=w
