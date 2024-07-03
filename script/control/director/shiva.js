@@ -1,8 +1,8 @@
 import * as director from './director.js'
 import * as rpg from '../rpg.js'
-import * as biome from '../biome.js'
 import * as color from '../../model/color.js'
 import * as point from '../../model/point.js'
+import * as biome from '../../model/biome.js'
 
 export class Realm{
   static pool=[]

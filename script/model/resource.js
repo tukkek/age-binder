@@ -1,6 +1,6 @@
 import * as rpg from '../control/rpg.js'
 import * as engine from '../control/engine.js'
-import * as biome from '../control/biome.js'
+import * as biome from './biome.js'
 import * as image from '../view/image.js'
 
 const YIELD=10

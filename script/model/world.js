@@ -1,6 +1,6 @@
 import * as point from './point.js'
+import * as biome from './biome.js'
 import * as rpg from '../control/rpg.js'
-import * as biome from '../control/biome.js'
 import * as brahma from '../control/director/brahma.js'
 import * as shiva from '../control/director/shiva.js'
 
