@@ -1,5 +1,6 @@
 import * as director from './director.js'
 import * as rpg from '../rpg.js'
+import * as biome from '../biome.js'
 import * as color from '../../model/color.js'
 import * as point from '../../model/point.js'
 
@@ -14,18 +15,11 @@ export class Realm{
     this.area=[]
   }
   
-  colonize(cell){
-    if(cell.sea||cell.owner) return false
-    cell.owner=this
-    this.area.push(cell)
-    return true
-  }
-  
-  convert(cell){}//TODO
-  
-  conquer(cell){
+  expand(cell,takeover=false){
     if(cell.sea) return false
     if(cell.owner){
+      if(!takeover) return false
+      if(cell.owner==this) return false
       let a=cell.owner.area
       a.splice(a.indexOf(cell),1)
     }
@@ -34,15 +28,39 @@ export class Realm{
     return true
   }
   
-  get dead(){return this.area.length==0}
+  colonize(cell){
+    if(cell.owner==this){
+      cell.food+=1
+      return true
+    }
+    return this.expand(cell)
+  }
+  
+  convert(cell){}//TODO
+  
+  conquer(cell){
+    //TODO
+    if(!this.expand(cell,true)) return false
+    return true
+  }
+  
+  die(){
+    if(this.area.length>0) return false
+    instance.log(`The ${realm.name} has vanished`)
+    return true
+  }
   
   turn(){
-    if(this.dead){
-      instance.log(`The ${realm.name} has vanished`)
-      return false
+    let w=instance.world
+    let valid=[[0,w.width],[0,w.height]]
+    for(let a of this.area){
+      a.produce()
+      let neighbors=a.point.expand()
+                      .filter(p=>p.validate(valid[0],valid[1]))
+                      .map(p=>w.grid[p.x][p.y])
+      if(a.food>=1&&this.colonize(neighbors.reduce((a,b)=>a.food<b.food?a:b)))
+        a.food-=1
     }
-    //TODO
-    return true
   }
 }
 
@@ -57,10 +75,12 @@ class Shiva extends director.Director{
     if(pool.length==0) return
     if(!rpg.chance(100)) return
     let realm=pool.shift()
-    let p=false
     let w=this.world
-    while(!p||!realm.conquer(w.grid[p.x][p.y]))
-      p=point.random([0,w.width-1],[0,w.height-1])
+    let cell=false
+    while(!cell||!cell.eat()||!realm.expand(cell,true)){
+      let p=point.random([0,w.width-1],[0,w.height-1])
+      cell=w.grid[p.x][p.y]
+    }
     this.realms.push(realm)
     this.log(`The ${realm.name} is born`)
   }
@@ -68,10 +88,8 @@ class Shiva extends director.Director{
   play(){
     this.world.year+=1
     this.spawn()
-    let dead=false
-    for(let r of this.realms)
-      if(!r.turn()) dead=true
-    if(dead) this.realms=this.realms.filter(r=>!r.dead)
+    this.realms=this.realms.filter(r=>!r.die())
+    for(let r of this.realms) r.turn()
   }
 }
 

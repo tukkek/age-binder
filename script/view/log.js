@@ -40,4 +40,7 @@ export function update(){
   ELEMENTS[3].textContent=` (${p.toFixed(1)}s)`
 }
 
-export function enter(message){entries.push(new Page(message))}
+export function enter(message){
+  entries.push(new Page(message))
+  console.log(message)
+}

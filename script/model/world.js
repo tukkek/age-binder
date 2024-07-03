@@ -4,6 +4,7 @@ import * as biome from '../control/biome.js'
 import * as brahma from '../control/director/brahma.js'
 import * as shiva from '../control/director/shiva.js'
 
+const FOOD=[biome.forest,/*this.sea||*/,biome.water,biome.plains]
 const AGE=100_000//years
 
 class Cell{
@@ -35,9 +36,20 @@ class Cell{
   
   get desert(){return this.fertility<=.2}
   
-  get land(){return !(this.sea||this.water)}
+  get land(){return !this.sea&&!this.water}
   
   get biome(){return biome.get(this)}
+  
+  produce(){
+    if(this.ice||this.desert) return
+    let w=this.weather
+    if(this.forest||this.sea||this.water) this.food+=w
+    else if(this.mountain) this.arms+=1
+    else if(rpg.chance(2)) this.food+=w
+    else this.trade+=1
+  }
+  
+  eat(){return FOOD.indexOf(this.biome)>=0}
 }
 
 export class World{

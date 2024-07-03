@@ -53,12 +53,12 @@ class Hex{//im too dumb to do hexes... T_T
   }
   
   draw(){
-    VIEW.lineWidth=1
     let o=this.own()
+    if(!o) return
+    VIEW.lineWidth=2
     VIEW.strokeStyle=o?color.gems.get(o.color):'black'
     VIEW.beginPath()
     VIEW.arc(this.x,this.y,hexsize,0,2*Math.PI,false)
-    VIEW.setLineDash([1,2])
     VIEW.stroke()
     this.overlay()
   }
