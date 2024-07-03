@@ -44,7 +44,20 @@ export class Realm{
     return true
   }
   
-  convert(cell){}//TODO
+  convert(cell){
+    if(cell.owner==this){
+      cell.worship+=1
+      return true
+    }
+    if(!cell.owner) return false
+    if(cell.worship>0){
+      cell.worship-=1
+      return false
+    }
+    if(!this.expand(cell,true)) return false
+    cell.culture=this.culture
+    return true
+  }
   
   conquer(cell){
     if(cell.owner==this){
@@ -87,6 +100,7 @@ export class Realm{
                       .map(p=>w.grid[p.x][p.y])
       for(let n of rpg.shuffle(neighbors)){
         if(a.food>=1&&a.food>n.food&&this.colonize(n)) a.food-=1
+        if(a.worship>=1&&a.worship>n.worship&&this.convert(n)) a.worship-=1
         if(a.arms>=1&&a.arms>n.arms&&this.conquer(n)) a.arms-=1
       }
       if(a.food>fat.food) fat=a
