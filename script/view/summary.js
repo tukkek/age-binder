@@ -1,24 +1,18 @@
 import * as engine from '../control/engine.js'
 
 const VIEW=document.querySelector('#summary')
-const DETAIL=VIEW.querySelector('template#detail').content.children[0]
-const OWNER='owner'
-const RESOURCES='resources'
-const ELEVATION='elevation'
-const BIOME='biome'
-const WATERS='waters'
-const WEATHER='weather'
-const DETAILS=new Map([OWNER,BIOME,ELEVATION,RESOURCES,WATERS,WEATHER].map(detail=>[detail,false]))
-const RANGE=['very low','low','average','high','very high']
-const WEATHERRANGE=['very cold','cold','temperate','hot','very hot']
+const POLITICS=VIEW.querySelector('.geopolitics')
+const GEOGRAPHY=VIEW.querySelector('.geography')
+const RANGE=['very low','low',false,'high','very high']
+const WEATHERRANGE=['very cold','cold',false,'hot','very hot']
 
 var showing=false
 
-function describe(detail,value,range=RANGE){
+function describe(value,range=RANGE){
   let i=Math.floor(value/.2)
-  if(i>4) i=4
-  else if(i<0) i=0
-  DETAILS.get(detail).textContent=range[i]
+  if(i>4) return range[4]
+  if(i<0) return range[0]
+  return range[i]
 }
 
 function scan(hex,extractor){
@@ -41,10 +35,15 @@ function extract(array){
 
 function collect(all){
   all=all.filter(a=>a)
-  if(all.length==0) return 'none'
+  if(all.length==0) return false
   all=Array.from(new Set(all))
   all.sort()
-  return all.join(', ')
+  return all.join('; ')
+}
+
+function print(details,target){
+  details=details.filter(d=>d).join('; ').trim()
+  target.textContent=details.length==0?'':details[0].toUpperCase()+details.slice(1)+'.'
 }
 
 export function show(hex){
@@ -52,29 +51,16 @@ export function show(hex){
   VIEW.classList.remove('hidden')
   if(showing==hex) return false
   showing=hex
-  let a=hex.area
-  describe(ELEVATION,scan(hex,cell=>cell.elevation))
-  describe(WEATHER,scan(hex,cell=>cell.weather),WEATHERRANGE)
-  let descriptions=new Map()
-  descriptions.set(BIOME,extract(a.map(cell=>cell.biome)))
-  let resources=a.map(cell=>cell.resource&&cell.resource.name)
-  descriptions.set(RESOURCES,collect(resources))
-  let waters=collect(a.map(cell=>cell.sea?'open sea':cell.water))
-  descriptions.set(WATERS,waters)
   let o=hex.owner
-  descriptions.set(OWNER,o?o.name:'none')
-  for(let d of descriptions.keys())
-    DETAILS.get(d).textContent=descriptions.get(d)
+  let a=hex.area
+  let politics=[o?o.name:'unclaimed',]
+  politics.push(...a.map(cell=>cell.resource&&cell.resource.name).filter(r=>r))
+  print(politics,POLITICS)
+  let geography=[extract(a.map(cell=>cell.biome)),
+                  describe(scan(hex,(cell)=>cell.weather),WEATHERRANGE),
+                  describe(scan(hex,(cell)=>cell.elevation)),
+                  collect(a.map(cell=>!cell.sea&&cell.water)),]
+  print(geography,GEOGRAPHY)
 }
 
-export function setup(){
-  VIEW.onmouseover=()=>VIEW.classList.toggle('right')
-  for(let d of DETAILS.keys()){
-    let view=DETAIL.cloneNode(true)
-    let name=d[0].toUpperCase()+d.slice(1)
-    let spans=view.querySelectorAll('span')
-    spans[0].textContent=name
-    DETAILS.set(d,spans[1])
-    VIEW.appendChild(view)
-  }
-}
+export function setup(){VIEW.onmouseover=()=>VIEW.classList.toggle('right')}
