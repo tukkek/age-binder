@@ -1,6 +1,6 @@
 //TODO import * as character from '../model/character.js'
 import * as map from '../view/map.js'
-import * as label from '../view/label.js'
+import * as log from '../view/log.js'
 import * as setupm from '../view/setup.js'
 import * as controls from '../view/controls.js'
 import * as worldm from '../model/world.js'
@@ -23,7 +23,7 @@ function update(){
   let a=w.age
   if(!(a>lastupdate[0]||y>lastupdate[1])) return
   lastupdate=[w.age,w.year]
-  label.update()
+  log.update()
   if(debug.profile&&!(a==1&&y==1)) return
   if(debug.on&&a<1) return
   map.draw(redraw)
@@ -53,7 +53,7 @@ export async function setup(){
     world=new worldm.World(n,size[0],size[1])
   }
   map.setup()
-  label.setup()
+  log.setup()
   controls.setup()
   if(debug.test){
     debug.test.run()

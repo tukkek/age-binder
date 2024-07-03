@@ -1,5 +1,5 @@
 import * as engine from '../engine.js'
-import * as log from '../log.js'
+import * as log from '../../view/log.js'
 
 export class Director{
   constructor(){
@@ -10,5 +10,5 @@ export class Director{
   
   get world(){return engine.world}
   
-  log(message){log.log(message)}
+  log(message){log.enter(message)}
 }

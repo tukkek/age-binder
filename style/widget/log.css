@@ -1,15 +1,15 @@
-#label{
+#log{
   background-color:ivory;
   border-radius:1em;
   padding:.2em .5em;
   margin:auto 0;
   border:.1em solid lightgrey;
 }
-#label .name{
+#log .name{
   font-weight:bold;
   font-style:italic;
-  cursor:pointer;
+  cursor:help;
 }
-#label .pulse{
+#log .pulse{
   color:gray;
 }

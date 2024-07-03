@@ -38,7 +38,7 @@ export class Realm{
   
   turn(){
     if(this.dead){
-      instance.log(`The ${realm.name} has vanished...`)
+      instance.log(`The ${realm.name} has vanished`)
       return false
     }
     //TODO
@@ -62,7 +62,7 @@ class Shiva extends director.Director{
     while(!p||!realm.conquer(w.grid[p.x][p.y]))
       p=point.random([0,w.width-1],[0,w.height-1])
     this.realms.push(realm)
-    this.log(`The ${realm.name} is born!`)
+    this.log(`The ${realm.name} is born`)
   }
   
   play(){
