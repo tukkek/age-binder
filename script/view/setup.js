@@ -26,9 +26,10 @@ function generate(){
   show(false)
   let lists=Array.from(LISTS.querySelectorAll('.list'))
   let values=lists.map(l=>l.querySelector('textarea').value.split('\n'))
-  for(let i=0;i<lists.length;i++)
-    if(lists[i].querySelector('input[type=checkbox]').checked)
-      rpg.shuffle(values[i])
+  if(!debug.on)
+    for(let i=0;i<lists.length;i++)
+      if(lists[i].querySelector('input[type=checkbox]').checked)
+        rpg.shuffle(values[i])
   let nvalues=Math.min(...values.map(l=>l.length))
   let p=shiva.Realm.pool
   for(let i=0;i<nvalues;i++) 

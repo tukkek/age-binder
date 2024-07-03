@@ -53,7 +53,9 @@ export function show(hex){
   showing=hex
   let o=hex.owner
   let a=hex.area
-  let politics=[o?o.name:'unclaimed',]
+  let politics=[o?o.name:'unclaimed',
+                extract(a.map(cell=>cell.culture).filter(c=>c)),
+                extract(a.map(cell=>cell.people).filter(p=>p)),]
   politics.push(...a.map(cell=>cell.resource&&cell.resource.name).filter(r=>r))
   print(politics,POLITICS)
   let geography=[extract(a.map(cell=>cell.biome)),

@@ -33,7 +33,10 @@ export class Realm{
       cell.food+=1
       return true
     }
-    return this.expand(cell)
+    if(!this.expand(cell)) return false
+    cell.culture=this.culture
+    cell.people=this.people
+    return true
   }
   
   convert(cell){}//TODO
