@@ -33,8 +33,8 @@ class Language{
   
   roll(names){return names[rpg.low(0,names.length-1)]}
   
-  generate(names){
-    names=this.names.get(names)
+  generate(namesp){
+    let names=this.names.get(namesp)
     let n=this.roll(names)
     n[0]=this.roll(names)[0]
     let l=n.length
@@ -55,7 +55,7 @@ class Language{
       n[l-1]=last
     }
     n=n.join('').replaceAll(' ','-')
-    if(n[n.length-1]=='-') return this.generate(names)
+    if(n[n.length-1]=='-') return this.generate(namesp)
     return n[0].toUpperCase()+n.slice(1)
   }
   

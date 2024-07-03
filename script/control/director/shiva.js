@@ -4,6 +4,7 @@ import * as color from '../../model/color.js'
 import * as point from '../../model/point.js'
 import * as biome from '../../model/biome.js'
 import * as name from '../../model/name.js'
+import * as map from '../../view/map.js'
 
 export class Realm{
   static pool=[]
@@ -58,6 +59,12 @@ export class Realm{
     }
     if(!this.expand(cell,true)) return false
     cell.culture=this.culture
+    let p=cell.point
+    let hex=map.enter(p.x,p.y)
+    if(rpg.chance(Math.floor(hex.area.length/10))){
+      let province=hex.name
+      instance.log(`The ${this.name} are converting ${province}`)
+    }
     return true
   }
   
@@ -74,6 +81,12 @@ export class Realm{
     if(!this.expand(cell,true)) return false
     cell.culture=this.culture
     cell.people=this.people
+    let p=cell.point
+    let hex=map.enter(p.x,p.y)
+    if(rpg.chance(Math.floor(hex.area.length/10))){
+      let province=hex.name
+      instance.log(`The ${this.name} are invading in ${province}`)
+    }
     return true
   }
   
