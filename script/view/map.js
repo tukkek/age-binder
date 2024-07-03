@@ -42,6 +42,16 @@ class Hex{//im too dumb to do hexes... T_T
     return this.owner
   }
   
+  overlay(){
+    let i=this.icon
+    if(i){
+      i.remove()
+      this.icon=false
+    }
+    let a=this.area.find(a=>a.resource)
+    if(a) this.attach(a.resource.image,image.resources)
+  }
+  
   draw(){
     VIEW.lineWidth=1
     let o=this.own()
@@ -50,6 +60,7 @@ class Hex{//im too dumb to do hexes... T_T
     VIEW.arc(this.x,this.y,hexsize,0,2*Math.PI,false)
     VIEW.setLineDash([1,2])
     VIEW.stroke()
+    this.overlay()
   }
   
   enter(x,y){
@@ -93,22 +104,11 @@ export function enter(x,y){return hexes.find(h=>h.enter(x,y))}
 
 function follow(event){summary.show(enter(event.clientX,event.clientY))}
 
-function overlay(cell){
-  let r=cell.resource
-  if(!r) return
-  let hex=enter(cell.x,cell.y)
-  if(hex&&!hex.icon) hex.attach(r.image,image.resources)
-}
-
 export function draw(full=true){
   let w=engine.world
-  for(let h of hexes) if(h.icon){
-    h.icon.remove()
-    h.icon=false
-  }
-  for(let x=0;x<w.width;x++) for(let y=0;y<w.height;y++){
-    let cell=w.grid[x][y]
-    if(full){
+  if(full) for(let x=0;x<w.width;x++) 
+    for(let y=0;y<w.height;y++){
+      let cell=w.grid[x][y]
       let color=GROUND
       if(cell.sea) color=SEA
       else if(cell.water) color=WATER
@@ -117,8 +117,6 @@ export function draw(full=true){
       else if(cell.desert) color=cell.ice?ICE:DESERT
       paint(x,y,color)
     }
-    overlay(cell)
-  }
   VIEW.putImageData(data,0,0)
   for(let h of hexes) h.draw()
 }
