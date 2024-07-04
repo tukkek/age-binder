@@ -9,13 +9,17 @@ class Page{
   constructor(message){
     this.message=message
     let w=engine.world
-    this.date=`year ${w.year.toLocaleString()}, age ${w.age.toLocaleString()}`
+    this.year=w.year
+    this.age=w.age
   }
   
-  toString(){return `${this.message} - ${this.date}.`}
+  toString(){
+    let date=[this.year,this.age].map(d=>d.toLocaleString())
+    return `${this.message} - year ${date[0]}, age ${date[1]}.`
+  }
 }
 
-var entries=[]
+export var entries=[]
 
 function expand(){
   let log=entries.slice(1).map(e=>e.toString()).join('\n')

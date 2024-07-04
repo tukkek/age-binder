@@ -16,12 +16,12 @@ export var world=false
 var lastupdate=[-9000,-9000]
 var redraw=true
 
-function update(){
-  if(!controls.play()) return
+function update(force=false){
+  if(!controls.play()&&!force) return
   let w=world
   let y=w.year
   let a=w.age
-  if(!(a>lastupdate[0]||y>lastupdate[1])) return
+  if(!(a>lastupdate[0]||y>lastupdate[1])&&!force) return
   lastupdate=[w.age,w.year]
   log.update()
   if(debug.profile&&!(a==1&&y==1)) return
@@ -33,6 +33,12 @@ function update(){
 function tick(){
   if(!controls.play()) return
   if(world.live()) redraw=true
+  let logs=log.entries
+  let l=logs[logs.length-1]
+  if(l.year==world.year&&l.age==world.age){
+    controls.step()
+    update(true)
+  }
   if(!debug.on) return
   pulse=[pulse[1],new Date().getTime()]
   if(world.age>-50) debug.tick()
@@ -52,13 +58,13 @@ export async function setup(){
     let size=[window.innerWidth,window.innerHeight]
     world=new worldm.World(n,size[0],size[1])
   }
-  map.setup()
   log.setup()
+  map.setup()
   controls.setup()
   if(debug.test){
     debug.test.run()
     return
   }
-  setInterval(tick,1)
+  setInterval(tick,debug.on?1:100)
   setInterval(update,1000)
 }

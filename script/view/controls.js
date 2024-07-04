@@ -12,9 +12,8 @@ const SAVE=CONTROLS[3]
 
 var selected=PLAY
 
-function click(control,force=false){
+function click(control){
   if(control==selected) return
-  if(selected==STEP&&!force) return
   if(selected) selected.classList.remove(SELECTED)
   selected=control
   selected.classList.add(SELECTED)
@@ -25,19 +24,21 @@ function toggle(){
   else if(selected==PAUSE) click(PLAY)
 }
 
+function press(event){
+  let k=event.key
+  if(k==' ') toggle()
+  else if(k=='ArrowRight') click(STEP)
+}
+
 export function setup(){
   let show=[VIEW]
   if(debug.on) show.push(SAVE)
   for(let s of show) s.classList.remove('hidden')
   for(let c of CONTROLS.slice(0,3)) c.onclick=event=>click(c)
-  window.onkeypress=event=>{if(event.key==' ') toggle()}
+  window.onkeyup=press
   SAVE.onclick=save.store
 } 
 
-export function play(){
-  if(selected==STEP){
-    setTimeout(()=>click(PAUSE,true),3000)
-    return PLAY
-  }
-  return selected==PLAY
-}
+export function play(){return selected==PLAY||selected==STEP}
+
+export function step(){if(selected==STEP) click(PAUSE)}
