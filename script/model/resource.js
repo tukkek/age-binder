@@ -3,12 +3,10 @@ import * as engine from '../control/engine.js'
 import * as biome from './biome.js'
 import * as image from '../view/image.js'
 
-const YIELD=9
-
 class Resource{
-  constructor(name,image=false){
+  constructor(name,imagep){
+    this.image=image.resources.draw(imagep)
     this.name=name
-    this.image=image
   }
   
   use(cell){throw 'unimplemented'}
@@ -62,7 +60,7 @@ class Luxury extends Resource{
     super(name,image.resources.luxury)
   }
   
-  use(cell){cell.trade+=YIELD}
+  use(cell){cell.trade+=gain}
 }
 
 class Focus extends Resource{
@@ -70,7 +68,7 @@ class Focus extends Resource{
     super(name,image.resources.focus)
   }
   
-  use(cell){cell.worship+=YIELD}
+  use(cell){cell.worship+=gain}
 }
 
 class Food extends Resource{
@@ -78,7 +76,7 @@ class Food extends Resource{
     super(name,image.resources.food)
   }
   
-  use(cell){cell.food+=YIELD}
+  use(cell){cell.food+=gain}
 }
 
 class Material extends Resource{
@@ -86,7 +84,7 @@ class Material extends Resource{
     super(name,image.resources.material)
   }
   
-  use(cell){cell.arms+=YIELD}
+  use(cell){cell.arms+=gain}
 }
 
 class Technology extends Resource{
@@ -96,6 +94,8 @@ class Technology extends Resource{
   
   use(cell){cell.owner.science+=2}
 }
+
+export var gain=9
 
 var all=new Map([//0 is basic (implied)
   [biome.plains,[new Plains(),new Luxury('wine'),new Focus('tobacco'),

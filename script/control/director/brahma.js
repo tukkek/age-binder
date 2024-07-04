@@ -153,6 +153,8 @@ class Brahma extends director.Director{
   play(){
     let w=this.world
     w.age+=1
+    let a=w.age
+    if(a>0) this.log(`Age ${a} dawns in ${w.name}`)
     w.year=1
     this.rise()
     this.flood()

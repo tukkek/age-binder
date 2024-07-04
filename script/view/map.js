@@ -1,5 +1,4 @@
 import * as summary from './summary.js'
-import * as image from './image.js'
 import * as engine from '../control/engine.js'
 import * as point from '../model/point.js'
 import * as color from '../model/color.js'
@@ -48,12 +47,18 @@ class Hex{//im too dumb to do hexes... T_T
   
   overlay(){
     let i=this.icon
-    if(i){
-      i.remove()
-      this.icon=false
+    if(i) i.remove()
+    let cell=false
+    for(let a of this.area){
+      if(a.holding){
+        cell=a
+        break
+      }
+      if(a.resource&&a.owner) cell=a
     }
-    let a=this.area.find(a=>a.resource)
-    if(a) this.attach(a.resource.image,image.resources)
+    if(!cell) return
+    this.attach((cell.holding&&cell.holding.image)||
+                (cell.resource&&cell.resource.image))
   }
   
   draw(){
@@ -72,9 +77,9 @@ class Hex{//im too dumb to do hexes... T_T
       this.y-hexsize<=y&&y<this.y+hexsize+1
   }
   
-  attach(icon,gallery){
+  attach(icon){
     this.icon=ICON.cloneNode(true)
-    this.icon.src=gallery.prefix+icon
+    this.icon.src=icon
     let s=this.icon.style
     s.left=(this.x-hexsize/2)+'px'
     s.top=(this.y-hexsize/2)+'px'

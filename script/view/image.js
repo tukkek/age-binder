@@ -2,6 +2,8 @@ class Gallery{
   constructor(prefix){
     this.prefix=`./image/${prefix}/`
   }
+  
+  draw(image){return `${this.prefix}${image}`}
 }
 
 class Resources extends Gallery{
@@ -15,4 +17,13 @@ class Resources extends Gallery{
   }
 }
 
+class Holdings extends Gallery{
+  constructor(){
+    super('holding')
+  }
+  
+  draw(image){return `${super.draw(image)}.webp`}
+}
+
 export var resources=new Resources()
+export var holdings=new Holdings()

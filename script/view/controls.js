@@ -37,6 +37,7 @@ export function setup(){
   for(let c of CONTROLS.slice(0,3)) c.onclick=event=>click(c)
   window.onkeyup=press
   SAVE.onclick=save.store
+  if(debug.on) click(STEP)
 } 
 
 export function play(){return selected==PLAY||selected==STEP}

@@ -1,8 +1,10 @@
 import * as point from './point.js'
 import * as biome from './biome.js'
+import * as resource from './biome.js'
 import * as rpg from '../control/rpg.js'
 import * as brahma from '../control/director/brahma.js'
 import * as shiva from '../control/director/shiva.js'
+import * as map from '../view/map.js'
 
 const FOOD=[biome.forest,/*this.sea||*/,biome.water,biome.plains]
 const AGE=100_000//years
@@ -27,6 +29,7 @@ class Cell{
     this.owner=false
     this.people=false
     this.culture=false
+    this.holding=false
   }
   
   get sea(){return this.elevation<=.2}
@@ -42,17 +45,23 @@ class Cell{
   get biome(){return biome.get(this)}
   
   produce(){
-    if(this.resource) this.resource.use(this)
+    let r=this.resource
+    if(r) r.use(this)
+    let h=this.holding
+    if(h) h.turn(this)
     if(this.ice||this.desert) return
     let production=this.owner.technology
     let harvest=production*this.weather
-    if(this.forest||this.sea||this.water) this.food+=harvest
+    if(this.water==waters.oasis) this.worship+=resource.gain
+    else if(this.forest||this.sea||this.water) this.food+=harvest
     else if(this.mountain) this.arms+=production
     else if(rpg.chance(2)) this.food+=harvest
     else this.trade+=production
   }
   
   eat(){return FOOD.indexOf(this.biome)>=0}
+  
+  get hex(){return map.enter(this.point.x,this.point.y)}//TODO hex should be model?
 }
 
 export class World{

@@ -4,7 +4,12 @@ import * as color from '../../model/color.js'
 import * as point from '../../model/point.js'
 import * as biome from '../../model/biome.js'
 import * as name from '../../model/name.js'
-import * as map from '../../view/map.js'
+import * as holding from '../../model/holding.js'
+
+const PRECINCT=20
+const EMBASSY=.05
+const TOWN=.003
+const FORT=1
 
 export class Realm{
   static pool=[]
@@ -22,6 +27,8 @@ export class Realm{
   expand(cell,takeover=false){
     if(cell.sea) return false
     let o=cell.owner
+    let h=cell.hex
+    if(h&&h.area.indexOf(cell)<0) h=false
     if(o){
       if(!takeover) return false
       if(o==this) return false
@@ -31,7 +38,8 @@ export class Realm{
         let log=`The ${o.name} have been subjugated by the ${this.name}`
         instance.log(log)
       }
-    }
+    }else if(cell.resource&&h) 
+      instance.log(`The ${this.name} finds ${cell.resource.name} in the ${h.name}`)
     cell.owner=this
     this.area.push(cell)
     return true
@@ -49,29 +57,27 @@ export class Realm{
   }
   
   convert(cell){
+    // if(!cell.owner) return false
     if(cell.owner==this){
       cell.worship+=1
       return true
     }
-    if(!cell.owner) return false
     if(cell.worship>0){
       cell.worship-=1
       return false
     }
     if(!this.expand(cell,true)) return false
-    cell.culture=this.culture
-    let hex=this.enter(cell)
-    if(rpg.chance(Math.floor(hex.area.length/10)))
-      instance.log(`The ${this.name} are converting ${hex.name}`)
+    cell.culture=0
+    holding.build(holding.Precinct,PRECINCT,cell)
     return true
   }
   
   conquer(cell){
+    // if(!cell.owner) return false
     if(cell.owner==this){
       cell.arms+=1
       return true
     }
-    if(!cell.owner) return false
     if(cell.arms>0){
       cell.arms-=1
       return false
@@ -79,49 +85,38 @@ export class Realm{
     if(!this.expand(cell,true)) return false
     cell.culture=this.culture
     cell.people=this.people
+    cell.worship=0
     cell.trade/=2
-    let hex=this.enter(cell)
-    if(rpg.chance(Math.floor(hex.area.length/10)))
-      instance.log(`The ${this.name} are invading in ${hex.name}`)
+    cell.food/=2
+    holding.build(holding.Fort,FORT,cell)
     return true
-  }
-  
-  enter(cell){
-    let p=cell.point
-    return map.enter(p.x,p.y)
   }
   
   get dead(){return this.area.length==0}
   
   sail(cell){
-    // if(cell.trade<200) return
     let w=instance.world
-    let h=this.enter(cell)
-    if(!h) return
-    let a=1//map.hexsize*2
-    let f=Math.floor(cell.trade/a)
+    let f=Math.floor(cell.trade)
     if(f<=0) return
     let range=[[Math.max(0,cell.x-f),Math.min(cell.x+f,w.width-1)],
                 [Math.max(0,cell.y-f),Math.min(cell.y+f,w.height-1)]]
     let to=point.random(range[0],range[1])
     to=w.grid[to.x][to.y]
-    if(this.expand(to))
-      cell.trade-=cell.point.distance(to.point)*a
-    // if(to.sea||to.holding) return
-    // let o=to.owner
-    // if(o&&o!=this) return
-    if(to.owner==this&&rpg.chance(h.area.length*100))
-      console.log(`${this.name} founds an outpost in the ${h.name}`)
+    let outpost=TOWN
+    if(this.expand(to)){
+      cell.trade=0
+      outpost=EMBASSY
+    }
+    if(holding.build(holding.Outpost,outpost,cell)) cell.trade=0
   }
   
   turn(){
     if(this.area.length==0) return
     let w=instance.world
     let valid=[[0,w.width],[0,w.height]]
-    // let rich=this.area[0]
     for(let a of this.area){
       a.produce()
-      let neighbors=a.point.expand()
+      let neighbors=a.point.expand(2)
                       .filter(p=>p.validate(valid[0],valid[1]))
                       .map(p=>w.grid[p.x][p.y])
       for(let n of rpg.shuffle(neighbors)){
@@ -129,7 +124,6 @@ export class Realm{
         if(a.worship>=1&&a.worship>n.worship&&this.convert(n)) a.worship-=1
         if(a.arms>=1&&a.arms>n.arms&&this.conquer(n)) a.arms-=1
       }
-      // if(a.trade>rich.trade) rich=a
       this.sail(a)
     }
   }
@@ -158,10 +152,19 @@ class Shiva extends director.Director{
     this.log(`The ${realm.name} is born`)
   }
   
+  seed(){
+    let seeds=1
+    while(rpg.chance(2)) seeds+=1
+    while(this.realms.length<seeds&&Realm.pool.length>0)
+      this.spawn()
+  }
+  
   play(){
-    this.world.year+=1
-    this.spawn()
-    this.realms=this.realms.filter(r=>!r.dead)
+    let w=this.world
+    if(w.age==1&&w.year==1) this.seed()
+    else this.spawn()
+    w.year+=1
+    this.realms=rpg.shuffle(this.realms.filter(r=>!r.dead))
     for(let r of this.realms) r.turn()
   }
 }

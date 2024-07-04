@@ -2,6 +2,7 @@ import * as engine from '../control/engine.js'
 
 const VIEW=document.querySelector('#summary')
 const POLITICS=VIEW.querySelector('.geopolitics')
+const FEATURES=VIEW.querySelector('.features')
 const GEOGRAPHY=VIEW.querySelector('.geography')
 const RANGE=['very low','low',false,'high','very high']
 const WEATHER=['very cold','cold',false,'hot','very hot']
@@ -60,8 +61,11 @@ export function show(hex){
                 extract(a.map(cell=>cell.culture).filter(c=>c)),
                 extract(a.map(cell=>cell.people).filter(p=>p)),
                 describe((o.technology-1)/5,TECHNOLOGY),]
-  politics.push(...a.map(cell=>cell.resource&&cell.resource.name).filter(r=>r))
   print(politics,POLITICS)
+  let features=[]
+  features.push(...a.filter(cell=>cell.holding).map(cell=>cell.holding.title))
+  features.push(...a.filter(cell=>cell.resource).map(cell=>cell.resource.name))
+  print(features,FEATURES)
   let geography=[extract(a.map(cell=>cell.biome)),
                   describe(scan(hex,(cell)=>cell.weather),WEATHER),
                   describe(scan(hex,(cell)=>cell.elevation)),

@@ -23,6 +23,6 @@
 #summary .detail span:first-of-type{
   font-weight:bold;
 }
-#summary .geopolitics{
+#summary .geopolitics,#summary .features{
   margin-bottom:.5em;
 }
