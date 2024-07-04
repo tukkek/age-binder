@@ -1,12 +1,12 @@
 import * as point from './point.js'
 import * as biome from './biome.js'
-import * as resource from './biome.js'
+import * as resource from './resource.js'
 import * as rpg from '../control/rpg.js'
 import * as brahma from '../control/director/brahma.js'
 import * as shiva from '../control/director/shiva.js'
 import * as map from '../view/map.js'
 
-const FOOD=[biome.forest,/*this.sea||*/,biome.water,biome.plains]
+const FOOD=[biome.forest,biome.water,biome.plains]
 const AGE=100_000//years
 
 class Cell{
@@ -49,11 +49,11 @@ class Cell{
     if(r) r.use(this)
     let h=this.holding
     if(h) h.turn(this)
-    if(this.ice||this.desert) return
     let production=this.owner.technology
     let harvest=production*this.weather
     if(this.water==waters.oasis) this.worship+=resource.gain
-    else if(this.forest||this.sea||this.water) this.food+=harvest
+    else if(this.sea||this.desert||this.ice) return
+    else if(this.forest||this.water) this.food+=harvest
     else if(this.mountain) this.arms+=production
     else if(rpg.chance(2)) this.food+=harvest
     else this.trade+=production
@@ -67,7 +67,7 @@ class Cell{
 export class World{
   constructor(name,width,height){
     this.grid=Array.from(new Array(width),()=>new Array(height))
-    this.age=-rpg.high(50,100)
+    this.age=-rpg.roll(80,100)
     this.height=height
     this.width=width
     this.name=name

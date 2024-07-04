@@ -6,10 +6,9 @@ import * as biome from '../../model/biome.js'
 import * as name from '../../model/name.js'
 import * as holding from '../../model/holding.js'
 
-const PRECINCT=20
-const EMBASSY=.05
-const TOWN=.003
-const FORT=1
+const PRECINCT=.001
+const OUTPOST=.0002
+const FORT=.0001
 
 export class Realm{
   static pool=[]
@@ -57,9 +56,9 @@ export class Realm{
   }
   
   convert(cell){
-    // if(!cell.owner) return false
     if(cell.owner==this){
       cell.worship+=1
+      if(holding.build(holding.Precinct,cell.worship*PRECINCT,cell)) cell.worship=0
       return true
     }
     if(cell.worship>0){
@@ -67,15 +66,14 @@ export class Realm{
       return false
     }
     if(!this.expand(cell,true)) return false
-    cell.culture=0
-    holding.build(holding.Precinct,PRECINCT,cell)
+    cell.culture=this.culture
     return true
   }
   
   conquer(cell){
-    // if(!cell.owner) return false
     if(cell.owner==this){
       cell.arms+=1
+      if(holding.build(holding.Fort,cell.arms*FORT,cell)) cell.arms=0
       return true
     }
     if(cell.arms>0){
@@ -88,7 +86,6 @@ export class Realm{
     cell.worship=0
     cell.trade/=2
     cell.food/=2
-    holding.build(holding.Fort,FORT,cell)
     return true
   }
   
@@ -96,18 +93,17 @@ export class Realm{
   
   sail(cell){
     let w=instance.world
-    let f=Math.floor(cell.trade)
-    if(f<=0) return
-    let range=[[Math.max(0,cell.x-f),Math.min(cell.x+f,w.width-1)],
-                [Math.max(0,cell.y-f),Math.min(cell.y+f,w.height-1)]]
+    let t=Math.floor(cell.trade)
+    if(t<=0) return
+    if(holding.build(holding.Outpost,cell.trade*OUTPOST,cell)){
+      this.trade=0
+      return
+    }
+    let range=[[Math.max(0,cell.x-t),Math.min(cell.x+t,w.width-1)],
+                [Math.max(0,cell.y-t),Math.min(cell.y+t,w.height-1)]]
     let to=point.random(range[0],range[1])
     to=w.grid[to.x][to.y]
-    let outpost=TOWN
-    if(this.expand(to)){
-      cell.trade=0
-      outpost=EMBASSY
-    }
-    if(holding.build(holding.Outpost,outpost,cell)) cell.trade=0
+    if(this.expand(to)) cell.trade=0
   }
   
   turn(){

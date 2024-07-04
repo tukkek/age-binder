@@ -1,7 +1,8 @@
 import * as image from '../view/image.js'
 import * as log from '../view/log.js'
 import * as rpg from '../control/rpg.js'
-import * as resource from './resource.js'
+
+const GAIN=0
 
 class Holding{
   constructor(name,action){
@@ -23,7 +24,7 @@ export class Outpost extends Holding{
     super('outpost','founds an outpost')
   }
   
-  turn(cell){cell.trade+=resource.gain}
+  turn(cell){cell.trade+=GAIN}
   
   baptize(title){this.title=`Outpost of ${title}`}
 }
@@ -33,7 +34,7 @@ export class Fort extends Holding{
     super('fort','erects a fort')
   }
   
-  turn(cell){cell.arms+=resource.gain}
+  turn(cell){cell.arms+=GAIN}
   
   baptize(title){this.title=`Fort ${title}`}
 }
@@ -43,7 +44,7 @@ export class Precinct extends Holding{
     super('precint','establishes a precinct')
   }
   
-  turn(cell){cell.worship+=resource.gain}
+  turn(cell){cell.worship+=GAIN}
   
   baptize(title){this.title=`${title} precinct`}
 }
@@ -52,6 +53,7 @@ export function build(type,chance,cell){
   if(cell.holding) return false
   let a=cell.hex.area
   chance=Math.floor(a.length/chance)
+  if(chance<1) chance=1
   if(!rpg.chance(chance)) return false
   if(a.indexOf(cell)<0) return false
   let holding=new type()
