@@ -8,7 +8,7 @@
 <link rel='stylesheet' href='style/engine.css'>
 <link rel='stylesheet' href='style/setup.css'>
 <link rel='stylesheet' href='style/map.css'>
-<link rel='stylesheet' href='style/summary.css'>
+<link rel='stylesheet' href='style/details.css'>
 <link rel='stylesheet' href='style/widget/log.css'>
 <link rel='stylesheet' href='style/widget/controls.css'>
 <link rel='stylesheet' href='style/widget/widgets.css'>
@@ -48,11 +48,14 @@
   </div>
 </div>
 
-<div id='summary' class='hidden'>
-  <div class='header'>Overview</div>
-  <div class='geopolitics'></div>
-  <div class='features'></div>
-  <div class='geography'></div>
+<div id='details' class='hidden'>
+  <div class='header'></div>
+  <template id='summary'><div class='summary'>
+    <div class='body'></div>
+    <div class='footer'>(Click to expand).</div>
+  </div></template>
+  <template id='details'><div class='details'></div></template>
+  <a class='close' href='#'>Close</a>
 </div>
 
 <script src="library/seedrandom.alea.min.js"></script>

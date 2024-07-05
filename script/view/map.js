@@ -1,4 +1,4 @@
-import * as summary from './summary.js'
+import * as details from './details.js'
 import * as engine from '../control/engine.js'
 import * as point from '../model/point.js'
 import * as color from '../model/color.js'
@@ -111,7 +111,9 @@ function validate(x,y){
 
 export function enter(x,y){return hexes.find(h=>h.enter(x,y))}
 
-function follow(event){summary.show(enter(event.clientX,event.clientY))}
+function follow(event){details.summarize(enter(event.clientX,event.clientY))}
+
+function detail(event){details.detail(enter(event.clientX,event.clientY))}
 
 export function draw(full=true){
   let w=engine.world
@@ -131,7 +133,7 @@ export function draw(full=true){
 }
 
 export function setup(){
-  summary.setup()
+  details.setup()
   let world=engine.world
   let w=world.width
   let h=world.height
@@ -143,6 +145,7 @@ export function setup(){
     hexes.push(new Hex(x-align,y))
   }
   document.body.onmousemove=follow
+  document.body.onclick=detail
   data=VIEW.getImageData(0,0,w,h)
   CANVAS.classList.remove('hidden')
   draw()

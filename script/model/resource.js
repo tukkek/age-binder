@@ -98,17 +98,17 @@ class Technology extends Resource{
 export var gain=9
 
 var all=new Map([//0 is basic (implied)
-  [biome.plains,[new Plains(),new Luxury('wine'),new Focus('tobacco'),
-              new Food('spices'),new Material('horses'),new Technology('powder')]],
-  [biome.forest,[new Forest(),new Luxury('dyes'),new Focus('silk'),
-              new Food('fruit'),new Material('ivory'),new Technology('aluminum')]],
-  [biome.desert,[false,new Luxury('silver'),new Luxury('gold'),
-              new Focus('incense'),new Food('salt'),new Material('oil'),new Technology('uranium')]],
-  [biome.mountain,[new Mountain(),new Luxury('gems'),new Focus('marble'),new Material('stone'),
-                new Technology('iron')]],
-  [biome.water,[new Water(),new Luxury('cotton'),new Focus('amber'),new Food('sugar'),
-            new Technology('coal')]],
-  [biome.ice,[false,new Luxury('fur'),new Focus('jade')]],
+  [biome.plains,[new Plains(),new Luxury('Wine'),new Focus('Tobacco'),
+              new Food('Spices'),new Material('Horses'),new Technology('Powder')]],
+  [biome.forest,[new Forest(),new Luxury('Dyes'),new Focus('Silk'),
+              new Food('Fruit'),new Material('Ivory'),new Technology('Aluminum')]],
+  [biome.desert,[false,new Luxury('Silver'),new Luxury('Gold'),
+              new Focus('Incense'),new Food('Salt'),new Material('Oil'),new Technology('Uranium')]],
+  [biome.mountain,[new Mountain(),new Luxury('Gems'),new Focus('Marble'),new Material('Stone'),
+                new Technology('Iron')]],
+  [biome.water,[new Water(),new Luxury('Cotton'),new Focus('Amber'),new Food('Sugar'),
+            new Technology('Coal')]],
+  [biome.ice,[false,new Luxury('Fur'),new Focus('Jade')]],
   [biome.sea,[new Sea()/*,new Focus('pearls')*/]],
 ])
 
