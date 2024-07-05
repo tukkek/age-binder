@@ -8,7 +8,7 @@ export function high(min,max,m=Math.max){return m(roll(min,max),roll(min,max))}
 
 export function low(min,max){return high(min,max,Math.min)}
 
-export function chance(n){return roll(1,n)==n}
+export function chance(n){return n>=1&&roll(1,n)==n}
 
 export function shuffle(array){
   let last=array.length-1

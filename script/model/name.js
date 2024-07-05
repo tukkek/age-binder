@@ -55,7 +55,7 @@ class Language{
       n[l-1]=last
     }
     n=n.join('').replaceAll(' ','-')
-    if(n[n.length-1]=='-') return this.generate(namesp)
+    if(n.length<3||n[n.length-1]=='-') return this.generate(namesp)
     return n[0].toUpperCase()+n.slice(1)
   }
   

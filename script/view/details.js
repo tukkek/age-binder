@@ -62,13 +62,13 @@ export function summarize(hex){
   let features=[]
   for(let a of hex.area){
     let r=a.resource
-    if(r) features.push(r.name)
+    if(r) features.push(r.name.toLowerCase())
     let h=a.holding
     if(h) features.push(h.title)
   }
   if(features.length>0){
     features.sort()
-    body.push(features.join('; ')+'.')
+    body.push(encase(features.join('; '))+'.')
   }
   parent.querySelector('.body').textContent=body.join(' ')
   parent.querySelector('.footer').classList.toggle(HIDDEN,!o)
@@ -106,6 +106,30 @@ function census(hex,extractor){
 
 function encase(text){return text[0].toUpperCase()+text.slice(1)}
 
+function trace(family){
+  let details=replace(DETAILS)
+  for(let cell of engine.world.area){
+    let h=cell.holding
+    if(h) for(let p of h.people.filter(p=>p.name[1]==family)){
+      report(p.name.join(' '),[],details)
+      link(add(h.title,'detail',details),()=>enter(h,cell.hex))
+      add(p.title,'detail',details)
+    }
+  }
+}
+
+function talk(person,holding,hex){
+  HEADER.textContent=`${person.name.join(' ')} ${person.sex}`
+  let details=replace(DETAILS)
+  space(details)
+  let family=person.name[1]
+  link(add(`${family} family`,'detail',details),()=>trace(family))
+  add(`Age: ${person.age}`,'detail',details)
+  report('Position',[],details)
+  link(add(`${holding.title}`,'detail',details),()=>enter(holding,hex))
+  add(person.title,'detail',details)
+}
+
 function enter(holding,hex){
   HEADER.textContent=holding.title
   let details=replace(DETAILS)
@@ -113,6 +137,14 @@ function enter(holding,hex){
   add(`Since ${holding.founded}.`,'detail',details)
   link(add(hex.name,'detail',details),()=>detail(hex,true))
   space(details)
+  let people=holding.people
+  if(people.length>0){
+    report('Notables',[],details)
+    for(let p of people.sort((a,b)=>a.level-b.level).reverse()){
+      link(add(p.name.join(' '),'detail',details),()=>talk(p,holding,hex))
+      add(p.title,'detail',details)
+    }
+  }
 }
 
 function speak(realm){

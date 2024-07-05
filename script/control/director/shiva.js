@@ -10,6 +10,45 @@ const PRECINCT=.001
 const OUTPOST=.0002
 const FORT=.0001
 
+class Person{
+  constructor(family,cell){
+    this.point=cell.point.clone()
+    this.age=rpg.low(0,100)
+    this.level=0
+    let male=rpg.chance(2)
+    this.sex=male?'♂':'♀'
+    let l=cell.owner.language
+    this.name=[male?l.male:l.female,family]
+  }
+
+  get cell(){return instance.world.grid[this.point.x][this.point.y]}
+  
+  get holding(){return this.cell.holding}
+  
+  get title(){return this.holding.rank(this)}
+  
+  get hex(){return this.cell.hex}
+  
+  live(){
+    if(rpg.chance(100)){
+      instance.log(`${this.name.join(' ')} dies in ${this.hex.name} ${this.holding.name}`)
+      return false
+    }
+    this.age+=1
+    if(this.level<4&&rpg.chance(30)){
+      this.level+=1
+      this.announce()
+    }
+    return true
+  }
+  
+  announce(){
+    let t=this.title.toLowerCase()
+    let h=this.hex.name.split(' ')[0]
+    instance.log(`${this.name.join(' ')} becomes ${t} at ${h} ${this.holding.name}`)
+  }
+}
+
 export class Realm{
   static pool=[]
   
@@ -21,6 +60,7 @@ export class Realm{
     this.area=[]
     this.language=name.speak(people)
     this.science=0
+    this.families=[]
   }
   
   expand(cell,takeover=false){
@@ -38,7 +78,7 @@ export class Realm{
         instance.log(log)
       }
     }else if(cell.resource&&h) 
-      instance.log(`The ${this.name} finds ${cell.resource.name} in the ${h.name}`)
+      instance.log(`The ${this.name} finds ${cell.resource.name.toLowerCase()} in the ${h.name}`)
     cell.owner=this
     this.area.push(cell)
     return true
@@ -125,6 +165,18 @@ export class Realm{
   }
   
   get technology(){return 1+this.science/500}
+  
+  birth(cell){
+    let families=this.families
+    let family=false
+    if(rpg.chance(families.length+1)){
+      family=this.language.family
+      families.push(family)
+    }else family=rpg.pick(families)
+    let p=new Person(family,cell)
+    p.announce()
+    return p
+  }
 }
 
 class Shiva extends director.Director{

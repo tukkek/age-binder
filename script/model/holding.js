@@ -6,50 +6,78 @@ import * as engine from '../control/engine.js'
 const GAIN=0
 
 class Holding{
-  constructor(name,action){
+  constructor(name,cell){
+    this.title=cell.owner.language.province
     this.image=image.holdings.draw(name)
-    this.action=action
-    this.title=false
+    this.point=cell.point.clone()
     this.name=name
     let w=engine.world
     this.founded=`${w.year}, age ${w.age}`
+    this.people=[]
   }
   
-  turn(cell){throw 'unimplemented'}
+  turn(){
+    this.cell.food-=this.loss
+    this.people=this.people.filter(p=>p.live())
+    let c=this.cell
+    if(rpg.chance(50)) this.people.push(c.owner.birth(c))
+  }
   
-  announce(cell){log.enter(`${cell.owner.name} ${this.action} in the ${cell.hex.name}`)}
+  get cell(){return engine.world.grid[this.point.x][this.point.y]}
   
-  baptize(title){this.title=title}
+  announce(realm,hex){log.enter(`${realm.name} constructs a holding in the ${hex.name}`)}
+  
+  rank(person){throw 'unimplemented'}
+  
+  get loss(){return this.cell.hex.area.length}
 }
 
 export class Outpost extends Holding{
-  constructor(){
-    super('outpost','founds an outpost')
+  constructor(cell){
+    super('outpost',cell)
+    this.title=`Outpost of ${this.title}`
   }
   
-  turn(cell){cell.trade+=GAIN}
+  announce(realm,hex){log.enter(`${realm.name} founds an outpost in the ${hex.name}`)}
   
-  baptize(title){this.title=`Outpost of ${title}`}
+  rank(person){return ['Citizen','Leader','Boss','Overseer','Mayor'][person.level]}
+  
+  turn(){
+    this.cell.trade-=this.loss
+    super.turn()
+  }
 }
 
 export class Fort extends Holding{
-  constructor(){
-    super('fort','erects a fort')
+  constructor(cell){
+    super('fort',cell)
+    this.title=`Fort ${this.title}`
   }
   
-  turn(cell){cell.arms+=GAIN}
+  announce(realm,hex){log.enter(`${realm.name} erects a fort in the ${hex.name}`)}
   
-  baptize(title){this.title=`Fort ${title}`}
+  rank(person){return ['Soldier','Sergeant','Captain','Major','General'][person.level]}
+  
+  turn(){
+    this.cell.arms-=this.loss
+    super.turn()
+  }
 }
 
 export class Precinct extends Holding{
-  constructor(){
-    super('precint','establishes a precinct')
+  constructor(cell){
+    super('precinct',cell)
+    this.title=`${this.title} precinct`
   }
   
-  turn(cell){cell.worship+=GAIN}
+  announce(realm,hex){log.enter(`${realm.name} establishes a precinct in the ${hex.name}`)}
   
-  baptize(title){this.title=`${title} precinct`}
+  rank(person){return ['Servant','Acolyte','Dean','Bishop','Highness'][person.level]}
+  
+  turn(){
+    this.cell.worship-=this.loss
+    super.turn()
+  }
 }
 
 export function build(type,chance,cell){
@@ -59,10 +87,8 @@ export function build(type,chance,cell){
   if(chance<1) chance=1
   if(!rpg.chance(chance)) return false
   if(a.indexOf(cell)<0) return false
-  let holding=new type()
-  holding.announce(cell)
-  holding.turn(cell)
+  let holding=new type(cell)
+  holding.announce(cell.owner,cell.hex)
   cell.holding=holding
-  holding.baptize(cell.owner.language.province)
   return true
 }
