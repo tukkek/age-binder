@@ -37,7 +37,7 @@ div:has(>#setup){
   font-size:small;
 }
 #setup .lists .list label{
-  text-align:center;
+  text-align:right;
 }
 #setup .lists .list .header{
   font-weight:bold;

@@ -14,15 +14,11 @@ var callback=false
 
 function show(show=true){VIEW.parentNode.classList.toggle('hidden',!show)}
 
-export async function open(){
-  if(!debug.on) return new Promise((callbackp)=>callback=callbackp)
-  generate()
-  return Promise.resolve()
-}
+export async function open(){return debug.on?Promise.resolve():new Promise((callbackp)=>callback=callbackp)}
 
 export function name(){return SCENARIO.value||randomize()}
 
-function generate(){
+export function generate(){
   show(false)
   let lists=Array.from(LISTS.querySelectorAll('.list'))
   let values=lists.map(l=>l.querySelector('textarea').value.split('\n'))
@@ -34,7 +30,6 @@ function generate(){
   let p=shiva.Realm.pool
   for(let i=0;i<nvalues;i++) 
     p.push(new shiva.Realm(...values.map(values=>values[i])))
-  if(callback) callback()
 }
 
 function randomize(){return namem.scenario.get()}
@@ -72,8 +67,8 @@ export async function setup(){
   list('Cultures',worship.presets)
   if(debug.on) return
   show()
-  SCENARIO.onkeypress=event=>{if(event.key=='Enter') generate()}
+  SCENARIO.onkeypress=event=>{if(event.key=='Enter') callback()}
   SCENARIO.focus()
   VIEW.querySelector('.name button').onclick=()=>SCENARIO.value=randomize()
-  VIEW.querySelector('.generate').onclick=generate
+  VIEW.querySelector('.generate').onclick=()=>callback()
 }

@@ -58,6 +58,7 @@ export async function setup(){
     let size=[window.innerWidth,window.innerHeight]
     world=new worldm.World(n,size[0],size[1])
   }
+  setupm.generate()
   log.setup()
   map.setup()
   controls.setup()
