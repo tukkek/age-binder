@@ -68,7 +68,7 @@ export function summarize(hex){
   }
   if(features.length>0){
     features.sort()
-    body.push(features.join(';'))
+    body.push(features.join('; ')+'.')
   }
   parent.querySelector('.body').textContent=body.join(' ')
   parent.querySelector('.footer').classList.toggle(HIDDEN,!o)
@@ -79,14 +79,20 @@ function add(text,type,parent){
   d.classList.add(type)
   d.textContent=text
   parent.appendChild(d)
+  return d
 }
 
 function space(parent){add('','space',parent)}
 
+function link(element,action){
+  element.classList.add('link')
+  element.onclick=action
+}
+
 function report(section,data,parent){
   space(parent)
   add(section,'section',parent)
-  for(let d of data) add(d,'detail',parent)
+  for(let d of data) d=add(d,'detail',parent)
 }
 
 function census(hex,extractor){
@@ -100,7 +106,17 @@ function census(hex,extractor){
 
 function encase(text){return text[0].toUpperCase()+text.slice(1)}
 
-export function detail(hex){
+function enter(holding,hex){
+  HEADER.textContent=holding.title
+  let details=replace(DETAILS)
+  space(details)
+  add(`Since ${holding.founded}.`,'detail',details)
+  link(add(hex.name,'detail',details),()=>detail(hex,true))
+  space(details)
+}
+
+export function detail(hex,force=false){
+  if(VIEW.classList.contains(EXPANDED)&&!force) return
   VIEW.classList.add(EXPANDED)
   HEADER.textContent=hex.name
   let details=replace(DETAILS)
@@ -112,8 +128,11 @@ export function detail(hex){
     for(let s of sections) report(s[0],census(hex,s[1]),details)
     let t=describe((o.technology-1)/5,TECHNOLOGY)+'.'
     report('Technology',[t],details)
-    let holdings=a.filter(a=>a.holding).map(a=>a.holding.title)
-    if(holdings.length>0) report('Holdings',holdings,details)
+    let holdings=a.filter(a=>a.holding).map(a=>a.holding)
+    if(holdings.length>0){
+      report('Holdings',[],details)
+      for(let h of holdings) link(add(h.title,'detail',details),()=>enter(h,hex))
+    }
     let resources=a.filter(a=>a.resource&&a.owner).map(a=>a.resource.name)
     if(resources.length>0) report('Resources',resources,details)
   }
@@ -127,8 +146,8 @@ export function detail(hex){
 
 function dodge(){if(!VIEW.classList.contains(EXPANDED)) VIEW.classList.toggle('right')}
 
-function close(event){
-  event.stopPropagation()
+function close(event=false){
+  if(event) event.stopPropagation()
   VIEW.classList.remove(EXPANDED)
   VIEW.classList.add(HIDDEN)
 }
@@ -136,4 +155,5 @@ function close(event){
 export function setup(){
   VIEW.onmouseover=dodge
   VIEW.querySelector('a.close').onclick=close
+  window.addEventListener('keyup',(event)=>{if(event.key=='Escape') close()})
 }

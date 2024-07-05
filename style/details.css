@@ -21,6 +21,11 @@
 #details .close{
   display:none;
 }
+#details .link{
+  color:blue;
+  text-decoration:underline;
+  cursor:pointer;
+}
 #details.expanded{
   width:10em;
 }
@@ -37,9 +42,6 @@
   max-width:20em;
   text-align:center;
 }
-#details .summary .body{
-  text-align:left;
-}
 #details .summary .body:not(:empty){
   margin:.5em;
 }
@@ -51,10 +53,6 @@
 }
 #details .details .section{
   font-weight:bold;
-  white-space:nowrap;
-}
-#details .details .detail{
-  white-space:nowrap;
 }
 #details .details .space{
   height:.5em;

@@ -12,7 +12,8 @@ const SAVE=CONTROLS[3]
 
 var selected=PLAY
 
-function click(control){
+function click(control,event){
+  if(event) event.stopPropagation()
   if(control==selected) return
   if(selected) selected.classList.remove(SELECTED)
   selected=control
@@ -34,7 +35,7 @@ export function setup(){
   let show=[VIEW]
   if(debug.on) show.push(SAVE)
   for(let s of show) s.classList.remove('hidden')
-  for(let c of CONTROLS.slice(0,3)) c.onclick=event=>click(c)
+  for(let c of CONTROLS.slice(0,3)) c.onclick=event=>click(c,event)
   window.onkeyup=press
   SAVE.onclick=save.store
   if(debug.on) click(STEP)

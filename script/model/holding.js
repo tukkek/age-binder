@@ -1,6 +1,7 @@
 import * as image from '../view/image.js'
 import * as log from '../view/log.js'
 import * as rpg from '../control/rpg.js'
+import * as engine from '../control/engine.js'
 
 const GAIN=0
 
@@ -8,8 +9,10 @@ class Holding{
   constructor(name,action){
     this.image=image.holdings.draw(name)
     this.action=action
-    this.name=name
     this.title=false
+    this.name=name
+    let w=engine.world
+    this.founded=`${w.year}, age ${w.age}`
   }
   
   turn(cell){throw 'unimplemented'}
