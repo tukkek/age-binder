@@ -115,6 +115,15 @@ function enter(holding,hex){
   space(details)
 }
 
+function speak(realm){
+  HEADER.textContent=`${realm.people} language`
+  let details=replace(DETAILS)
+  let l=realm.language
+  report('Female names',Array.from(new Array(5),()=>`${l.female} ${l.family}`),details)
+  report('Male names',Array.from(new Array(5),()=>`${l.male} ${l.family}`),details)
+  report('Nouns',Array.from(new Array(5),()=>`${l.province}`),details)
+}
+
 export function detail(hex,force=false){
   if(VIEW.classList.contains(EXPANDED)&&!force) return
   VIEW.classList.add(EXPANDED)
@@ -123,6 +132,9 @@ export function detail(hex,force=false){
   let o=hex.owner
   let a=hex.area
   if(o){
+    space(details)
+    add(o.name,'detail',details)
+    link(add('Language','detail',details),()=>speak(o))
     let sections=[['Culture',(a)=>a.culture],
                   ['People',(a)=>a.people],]
     for(let s of sections) report(s[0],census(hex,s[1]),details)
