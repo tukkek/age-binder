@@ -53,6 +53,8 @@ export class Realm{
   static pool=[]
   
   constructor(color,people,culture){
+    let w=instance.world
+    this.founded=`${w.year}, age ${w.age}`
     this.name=color+' Empire'
     this.culture=culture
     this.people=people

@@ -108,14 +108,20 @@ function encase(text){return text[0].toUpperCase()+text.slice(1)}
 
 function trace(family){
   let details=replace(DETAILS)
+  let alive=false
   for(let cell of engine.world.area){
     let h=cell.holding
     if(h) for(let p of h.people.filter(p=>p.name[1]==family)){
-      report(p.name.join(' '),[],details)
+      space(details)
+      link(add(p.name.join(' '),'section',details),()=>talk(p))
       link(add(h.title,'detail',details),()=>enter(h,cell.hex))
       add(p.title,'detail',details)
+      alive=true
     }
   }
+  if(alive) return
+  space(details)
+  add('No notable living members.','detail',details)
 }
 
 function talk(person,holding,hex){
@@ -156,6 +162,24 @@ function speak(realm){
   report('Nouns',Array.from(new Array(5),()=>`${l.province}`),details)
 }
 
+function explore(realm){
+  HEADER.textContent=realm.name
+  let details=replace(DETAILS)
+  space(details)
+  add(`Since ${realm.founded}`,'detail',details)
+  space(details)
+  add(`People: ${realm.people}`,'detail',details)
+  add(`Culture: ${realm.culture}`,'detail',details)
+  link(add('Language','detail',details),()=>speak(realm))
+  let families=realm.families
+  if(families.length>0){
+    report('Families',[],details)
+    families.sort()
+    for(let f of families)
+      link(add(f,'detail',details),()=>trace(f))
+  }
+}
+
 export function detail(hex,force=false){
   if(VIEW.classList.contains(EXPANDED)&&!force) return
   VIEW.classList.add(EXPANDED)
@@ -165,8 +189,7 @@ export function detail(hex,force=false){
   let a=hex.area
   if(o){
     space(details)
-    add(o.name,'detail',details)
-    link(add('Language','detail',details),()=>speak(o))
+    link(add(o.name,'detail',details),()=>explore(o))
     let sections=[['Culture',(a)=>a.culture],
                   ['People',(a)=>a.people],]
     for(let s of sections) report(s[0],census(hex,s[1]),details)
