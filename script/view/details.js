@@ -124,15 +124,17 @@ function trace(family){
   add('No notable living members.','detail',details)
 }
 
-function talk(person,holding,hex){
+function talk(person){
   HEADER.textContent=`${person.name.join(' ')} ${person.sex}`
   let details=replace(DETAILS)
   space(details)
   let family=person.name[1]
   link(add(`${family} family`,'detail',details),()=>trace(family))
   add(`Age: ${person.age}`,'detail',details)
+  report('Characteristics',person.traits,details)
   report('Position',[],details)
-  link(add(`${holding.title}`,'detail',details),()=>enter(holding,hex))
+  let h=person.holding
+  link(add(`${h.title}`,'detail',details),()=>enter(h,person.hex))
   add(person.title,'detail',details)
 }
 

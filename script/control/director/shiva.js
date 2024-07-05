@@ -5,6 +5,7 @@ import * as point from '../../model/point.js'
 import * as biome from '../../model/biome.js'
 import * as name from '../../model/name.js'
 import * as holding from '../../model/holding.js'
+import * as character from '../../model/character.js'
 
 const PRECINCT=.001
 const OUTPOST=.0002
@@ -19,6 +20,7 @@ class Person{
     this.sex=male?'♂':'♀'
     let l=cell.owner.language
     this.name=[male?l.male:l.female,family]
+    this.traits=character.create()
   }
 
   get cell(){return instance.world.grid[this.point.x][this.point.y]}

@@ -31,7 +31,7 @@ const GROUPS=new Map([
   [WATER,'Water'],
 ])
 
-export class Character{
+class Character{
   constructor(){
     this.major=rpg.pick(SETS[4])
     this.minor=[HORIZONTAL,VERTICAL].map(axis=>rpg.pick(rpg.pick(axis)))
@@ -70,4 +70,9 @@ function rank(card){
     break
   }
   return rank
+}
+
+export function create(){
+  let c=new Character()
+  return [c.major,c.minor[0],c.minor[1]]
 }
