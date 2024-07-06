@@ -17,8 +17,7 @@ function describe(value,range=RANGE){
   return range[i]
 }
 
-function scan(hex,extractor){
-  let data=hex.area.map(extractor)
+function scan(data){
   data.sort()
   return data[Math.floor(data.length/2)]
 }
@@ -95,11 +94,12 @@ function report(section,data,parent){
   for(let d of data) d=add(d,'detail',parent)
 }
 
-function census(hex,extractor){
-  let data=Map.groupBy(hex.area,extractor)
+function census(cells,extractor){
+  let data=Map.groupBy(cells,extractor)
   data.delete(false)
   if(data.size==0) return ['None.']
   let keys=Array.from(data.keys())
+            .sort((a,b)=>data.get(a).length-data.get(b).length).reverse()
   let total=keys.map((c)=>data.get(c).length).reduce((a,b)=>a+b,0)
   return keys.map(c=>`${c} (${Math.floor(100*data.get(c).length/total)}%)`)
 }
@@ -169,10 +169,12 @@ function explore(realm){
   let details=replace(DETAILS)
   space(details)
   add(`Since ${realm.founded}`,'detail',details)
-  space(details)
-  add(`People: ${realm.people}`,'detail',details)
-  add(`Culture: ${realm.culture}`,'detail',details)
   link(add('Language','detail',details),()=>speak(realm))
+  let sections=[['People',(a)=>a.people],
+                  ['Culture',(a)=>a.culture],]
+  for(let s of sections) report(s[0],census(realm.area,s[1]),details)
+  report('Technology',[advance(realm.technology)],details)
+  space(details)
   let families=realm.families
   if(families.length>0){
     report('Families',[],details)
@@ -181,6 +183,8 @@ function explore(realm){
       link(add(f,'detail',details),()=>trace(f))
   }
 }
+
+function advance(technology){return describe((technology-1)/5,TECHNOLOGY)}
 
 export function detail(hex,force=false){
   if(VIEW.classList.contains(EXPANDED)&&!force) return
@@ -194,9 +198,9 @@ export function detail(hex,force=false){
     link(add(o.name,'detail',details),()=>explore(o))
     let sections=[['Culture',(a)=>a.culture],
                   ['People',(a)=>a.people],]
-    for(let s of sections) report(s[0],census(hex,s[1]),details)
-    let t=describe((o.technology-1)/5,TECHNOLOGY)+'.'
-    report('Technology',[t],details)
+    for(let s of sections) report(s[0],census(hex.area,s[1]),details)
+    let t=scan(hex.area.filter((a)=>a.owner).map((a)=>a.owner.technology))
+    report('Technology',[advance(t)],details)
     let holdings=a.filter(a=>a.holding).map(a=>a.holding)
     if(holdings.length>0){
       report('Holdings',[],details)
@@ -206,8 +210,8 @@ export function detail(hex,force=false){
     if(resources.length>0) report('Resources',resources,details)
   }
   let geography=[extract(a.map(cell=>cell.biome).map(b=>encase(b))),
-                  describe(scan(hex,(cell)=>cell.weather),WEATHER),
-                  describe(scan(hex,(cell)=>cell.elevation)),]
+                  describe(scan(hex.area.map((a)=>a.weather)),WEATHER),
+                  describe(scan(hex.area.map((a)=>a.elevation))),]
   report('Geography',geography.filter(g=>g),details)
   let waters=collect(a.filter(cell=>!cell.sea&&cell.water).map(cell=>cell.water)).map(w=>encase(w))
   if(waters.length>0) report('Waters',waters,details)

@@ -29,6 +29,7 @@ class Holding{
   
   rank(person){throw 'unimplemented'}
   
+  //TODO https://github.com/tukkek/age-binder/issues/1
   get loss(){return this.cell.hex.area.length}
 }
 

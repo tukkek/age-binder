@@ -32,7 +32,7 @@ class Person{
   get hex(){return this.cell.hex}
   
   live(){
-    if(rpg.chance(100)){
+    if(rpg.chance(50)){
       instance.log(`${this.name.join(' ')} dies in ${this.hex.name} ${this.holding.name}`)
       return false
     }

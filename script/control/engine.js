@@ -1,4 +1,3 @@
-//TODO import * as character from '../model/character.js'
 import * as map from '../view/map.js'
 import * as log from '../view/log.js'
 import * as setupm from '../view/setup.js'
