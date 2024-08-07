@@ -1,3 +1,6 @@
 [submodule "corpora"]
 	path = corpora
 	url = https://github.com/dariusk/corpora/
+[submodule "library/eloquium"]
+	path = library/eloquium
+	url = https://github.com/tukkek/eloquium

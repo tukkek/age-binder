@@ -41,7 +41,7 @@ class Hex{//im too dumb to do hexes... T_T
     let realms=Array.from(owners.keys())
     let r=realms.reduce((a,b)=>owners.get(a).length>owners.get(b).length?a:b)
     this.owner=r
-    if(this.name==UNNAMED) this.name=`${r.language.province} province`
+    if(this.name==UNNAMED) this.name=`${r.language.noun} province`
     return r
   }
   

@@ -7,7 +7,7 @@ const GAIN=0
 
 class Holding{
   constructor(name,cell){
-    this.title=cell.owner.language.province
+    this.title=cell.owner.language.noun
     this.image=image.holdings.draw(name)
     this.point=cell.point.clone()
     this.name=name
