@@ -187,7 +187,7 @@ function explore(realm){
 function advance(technology){return describe((technology-1)/5,TECHNOLOGY)}
 
 export function detail(hex,force=false){
-  if(VIEW.classList.contains(EXPANDED)&&!force) return
+  if(['hidden',EXPANDED].find((style)=>VIEW.classList.contains(style)&&!force)) return
   VIEW.classList.add(EXPANDED)
   HEADER.textContent=hex.name
   let details=replace(DETAILS)
